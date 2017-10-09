@@ -3,11 +3,11 @@ package ru.itis;
 public class Main {
 
     public static void main(String[] args) {
-        Car car1 = new Car(1);
-        Car car2 = new Car(2);
+        Car car1 = new Car();
+        Car car2 = new Car();
 
-        ParkingPlace parkingPlace1 = new ParkingPlace(1);
-        ParkingPlace parkingPlace2 = new ParkingPlace(2);
+        ParkingPlace parkingPlace1 = new ParkingPlace();
+        ParkingPlace parkingPlace2 = new ParkingPlace();
 
         Car[] carsInParkingPlace1 = parkingPlace1.getCars();
 
@@ -16,7 +16,7 @@ public class Main {
 
         showArray(carsInParkingPlace1);
 
-        Car car3 = new Car(3);
+        Car car3 = new Car();
 
         car2.driveOut();
         car3.driveIn(parkingPlace1);

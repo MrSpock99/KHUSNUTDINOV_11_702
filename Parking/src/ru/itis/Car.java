@@ -2,10 +2,10 @@ package ru.itis;
 
 public class Car {
     private ParkingPlace parkingPlace;
-    private int num;
+    private static int num = 0;
 
-    public Car(int num){
-        this.num = num;
+    public Car(){
+        num++;
     }
 
     public ParkingPlace getParkingPlace() {

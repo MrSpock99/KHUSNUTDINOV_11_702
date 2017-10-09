@@ -3,17 +3,17 @@ package ru.itis;
 import java.time.LocalTime;
 
 public class ParkingPlace {
-    private int num;
+    private static int num;
     private int count = 0;
     private Car[] cars = new Car[10];
     private LocalTime beginTime = LocalTime.parse("07:00:00");
-    private LocalTime finishTime = LocalTime.parse("21:00:00");
+    private LocalTime finishTime = LocalTime.parse("23:00:00");
 
     public Car[] getCars(){
         return cars;
     }
-    public ParkingPlace(int num){
-        this.num = num;
+    public ParkingPlace(){
+        num++;
     }
 
     void putCar(Car car){
@@ -36,14 +36,14 @@ public class ParkingPlace {
                 for (int i = 0; i < cars.length; i++) {
                     newCars[i] = cars[i];
                 }
-                car = null;//Лишнее?
+                cars = null;//Лишнее?
                 cars = newCars;
                 putCar(car);
             }
 
             System.out.println(car + " drove in");
         } else {
-            System.out.println("Парковка не работает");
+            System.out.println("Parking doesn't work");
         }
     }
 
@@ -66,13 +66,13 @@ public class ParkingPlace {
             }
 
         } else {
-            System.out.println("Парковка не работает");
+            System.out.println("Parking doesn't work");
 
         }
     }
 
     @Override
     public String toString() {
-        return "Парковка №" + num;
+        return "Parking №" + num;
     }
 }
