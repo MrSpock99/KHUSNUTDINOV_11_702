@@ -1,9 +1,12 @@
 package ru.itis;
 
 public class ArrayList {
-    int[] array = new int[10];
-    int count = 0;
+    private int[] array;
+    private int count = 0;
 
+    public ArrayList(int len){
+        array = new int[len];
+    }
     void addNum(int n){
         if (count > array.length - 1){
             int[] newArray = new int[n * 2];
@@ -30,6 +33,7 @@ public class ArrayList {
                     v = j;
                 }
             }
+            count++;
         }else {
             array[count] = num;
             count++;
