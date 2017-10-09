@@ -3,17 +3,17 @@ package ru.itis;
 import java.time.LocalTime;
 
 public class ParkingPlace {
-    private static int num;
+    private int num;
     private int count = 0;
     private Car[] cars = new Car[10];
     private LocalTime beginTime = LocalTime.parse("07:00:00");
-    private LocalTime finishTime = LocalTime.parse("23:00:00");
+    private LocalTime finishTime = LocalTime.parse("23:30:00");
 
     public Car[] getCars(){
         return cars;
     }
-    public ParkingPlace(){
-        num++;
+    public ParkingPlace(int num){
+        this.num = num;
     }
 
     void putCar(Car car){
