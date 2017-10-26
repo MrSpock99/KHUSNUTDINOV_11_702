@@ -3,42 +3,34 @@ package ru.itis;
 public class Main {
 
     public static void main(String[] args) {
-        Car car1 = new Car(1);
-        Car car2 = new Car(2);
+        Vehicle car = new Car("ordinary car");
+        Vehicle sportcar = new Sportcar("Sportcar");
+        Vehicle plane = new Plane("Plane");
+        Vehicle tank = new Tank("Tank");
+        Vehicle tractorBelarus = new TractorBelarus("Tractor Belarus",125);
 
-        ParkingPlace parkingPlace1 = new ParkingPlace(1);
-        ParkingPlace parkingPlace2 = new ParkingPlace(2);
+        Vehicle[] vehicles = {car,sportcar,plane,tank,tractorBelarus};
 
-        Car[] carsInParkingPlace1 = parkingPlace1.getCars();
+        showArray(vehicles);
 
-        car1.driveIn(parkingPlace1);
-        car2.driveIn(parkingPlace1);
+        ParkingPlace parkingPlace = new ParkingPlace(1);
 
-        showArray(carsInParkingPlace1);
+        car.driveIn(parkingPlace);
+        sportcar.driveIn(parkingPlace);
+        tractorBelarus.driveIn(parkingPlace);
+        plane.driveIn(parkingPlace);
+        tank.driveIn(parkingPlace);
 
-        Car car3 = new Car(3);
+        Vehicle[] vehiclesInParking = parkingPlace.getVehicles();
 
-        car2.driveOut();
-        car3.driveIn(parkingPlace1);
+        tank.driveOut();
 
-        showArray(carsInParkingPlace1);
-
-
-        car1.driveOut();
-        car2.driveOut();
-
-        showArray(carsInParkingPlace1);
-
-        car1.driveIn(parkingPlace1);
-
-        showArray(carsInParkingPlace1);
-
-
+        showArray(vehiclesInParking);
     }
 
-    static void showArray(Car[] cars){
-        for (Car item : cars){
-            System.out.print(item + " ");
+    static void showArray(Vehicle[] vehicles){
+        for (Vehicle item : vehicles){
+            System.out.print(item + "|");
         }
         System.out.println("");
     }
