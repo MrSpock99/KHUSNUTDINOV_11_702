@@ -3,9 +3,11 @@ package ru.itis;
 public abstract class Vehicle {
     protected ParkingPlace parkingPlace;
     protected String name;
+    protected int fuelPerKm;
 
-    Vehicle(String name){
+    Vehicle(String name, int fuelPerKm){
         this.name = name;
+        this.fuelPerKm = fuelPerKm;
     }
 
     void setParkingPlace(ParkingPlace parkingPlace) {

@@ -4,8 +4,8 @@ public class TractorBelarus extends Vehicle {
 
     private int potatoesCount;
 
-    TractorBelarus(String name, int potatoesCount) {
-        super(name);
+    TractorBelarus(String name,int fuelPerKm, int potatoesCount) {
+        super(name,fuelPerKm);
         this.potatoesCount = potatoesCount;
     }
 

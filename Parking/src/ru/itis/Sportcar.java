@@ -1,7 +1,7 @@
 package ru.itis;
 
 public class Sportcar extends Vehicle {
-    Sportcar(String name) {
-        super(name);
+    Sportcar(String name,int fuelPerKm){
+        super(name, fuelPerKm);
     }
 }
