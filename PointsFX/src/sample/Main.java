@@ -105,7 +105,6 @@ private static ArrayList<XYChart.Series> getLines() {
     inputPoints.sort(new XComparator());
     final NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
-    final LineChart<Number,Number> lineChart = new LineChart<>(xAxis,yAxis);
     ArrayList<XYChart.Series> seriesList = new ArrayList<>();
     for (int i = 0; i < inputPoints.size();){
         Line line = new Line();
@@ -123,9 +122,6 @@ private static ArrayList<XYChart.Series> getLines() {
             }
         }
         seriesList.add(series);
-    }
-    for (XYChart.Series s : seriesList){
-        lineChart.getData().add(s);
     }
 
     return seriesList;
