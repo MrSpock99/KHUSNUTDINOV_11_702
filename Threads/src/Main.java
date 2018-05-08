@@ -34,7 +34,7 @@ public class Main {
             threads[i] = new Thread(() -> {
                 for (int i1 = finalBegin; i1 < finalEnd; i1++){
                         threadSum[0] += arr[i1];
-                        System.out.println(threadSum[0]);
+                        //System.out.println(threadSum[0]);
                 }
             });
             if (i >= k - 2){
