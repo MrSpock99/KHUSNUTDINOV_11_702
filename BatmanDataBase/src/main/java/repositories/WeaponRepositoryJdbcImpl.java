@@ -13,6 +13,10 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
     //language=sql
     private static final String SQL_FIND_BY_ID =
             "select * from weapon_ammo where weapon_id = ?";
+    //language=sql
+    private static final String SQL_FIND_BY_ID_IN_WEAPON_TABLE =
+            "select * from weapon where id = ?";
+
     private Connection connection;
     private PreparedStatement findByIdStatement;
 
@@ -21,9 +25,7 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
     @SneakyThrows
     public WeaponRepositoryJdbcImpl(Connection connection) {
         this.connection = connection;
-        findByIdStatement = connection.prepareStatement(SQL_FIND_BY_ID);
         ammoRepositoryJdbc = new AmmoRepositoryJdbcImpl(connection);
-
     }
 
     @Override
@@ -44,14 +46,27 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
     @Override
     @SneakyThrows
     public Weapon findOne(Long id) {
+        findByIdStatement = connection.prepareStatement(SQL_FIND_BY_ID);
         findByIdStatement.setLong(1, id);
         ResultSet resultSet = findByIdStatement.executeQuery();
-        resultSet.next();
+
+        if (!resultSet.next()) {
+            return null;
+        }
 
         Weapon weapon = new Weapon();
-        weapon.setAmount(1);
         weapon.setId(resultSet.getLong("weapon_id"));
         weapon.setAmmo(ammoRepositoryJdbc.findOne(resultSet.getLong("ammo_id")));
+
+        findByIdStatement = connection.prepareStatement(SQL_FIND_BY_ID_IN_WEAPON_TABLE);
+        findByIdStatement.setLong(1, id);
+        resultSet = findByIdStatement.executeQuery();
+
+        if (!resultSet.next()) {
+            return null;
+        }
+
+        weapon.setAmount(resultSet.getInt("amount"));
 
         return weapon;
     }
@@ -60,4 +75,5 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
     public List<Weapon> findAll() {
         return null;
     }
+
 }

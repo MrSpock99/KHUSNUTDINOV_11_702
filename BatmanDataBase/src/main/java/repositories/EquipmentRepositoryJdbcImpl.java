@@ -44,7 +44,9 @@ public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
     public Equipment findOne(Long id) {
         findByIdStatement.setLong(1, id);
         ResultSet resultSet = findByIdStatement.executeQuery();
-        resultSet.next();
+        if (!resultSet.next()) {
+            return null;
+        }
 
         Equipment equipment = new Equipment();
         equipment.setId(resultSet.getLong("id"));

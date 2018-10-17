@@ -28,8 +28,8 @@ public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
     private static final String SQL_SELECT_ALL =
             "select * from subjects";
     //language=sql
-    private static final String SQL_UPDATE_ALIAS =
-            "update subjects set alias = ? where alias = ?";
+    private static final String SQL_UPDATE_ALL_BY_ID =
+            "update subjects set alias = ?, real_name = ?,weaknes_id = ?, defence_id = ?, type = ?   where id = ?";
     private Connection connection;
     private WeaponRepositoryJdbcImpl weapon;
     private EquipmentRepositoryJdbcImpl equipment;
@@ -70,15 +70,20 @@ public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
         statement.setString(2, model.getRealName());
         statement.setString(3, model.getType().name());
 
-        statement.executeQuery();
+        statement.execute();
     }
 
     @Override
     @SneakyThrows
     public void update(Subject model) {
-        statement = connection.prepareStatement(SQL_UPDATE_ALIAS);
+        statement = connection.prepareStatement(SQL_UPDATE_ALL_BY_ID);
         statement.setString(1, model.getAlias());
         statement.setString(2, model.getRealName());
+        statement.setLong(3, model.getWeakness().getId());
+        statement.setLong(4, model.getDefence().getId());
+        statement.setString(5, model.getType().name());
+
+        statement.executeUpdate();
     }
 
     @Override
@@ -86,7 +91,7 @@ public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
     public void delete(Long id) {
         statement = connection.prepareStatement(SQL_DELETE_BY_ID);
         statement.setLong(1, id);
-        statement.executeQuery();
+        statement.execute();
     }
 
     @Override

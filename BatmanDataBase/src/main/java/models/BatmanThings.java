@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class BatmanThings {
-    String name;
-    int amount;
+    private String name;
+    private int amount;
     private Long id;
 
     public BatmanThings() {

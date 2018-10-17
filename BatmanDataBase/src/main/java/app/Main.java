@@ -2,11 +2,13 @@ package app;
 
 import lombok.SneakyThrows;
 import models.Subject;
+import models.SubjectType;
 import repositories.SubjectsRepositoryJdbcImpl;
 
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.List;
 import java.util.Properties;
 
 public class Main {
@@ -23,5 +25,15 @@ public class Main {
 
         Subject subject = subjectsRepositoryJdbc.findByAlias("Joker");
         System.out.println(subject.toString());
+
+        Subject superMan = Subject.builder()
+                .alias("Super Man")
+                .realName("Clark Kent")
+                .type(SubjectType.HERO)
+                .build();
+
+        List<Subject> subjectList = subjectsRepositoryJdbc.findAll();
+
+        subjectList.forEach(System.out::println);
     }
 }
