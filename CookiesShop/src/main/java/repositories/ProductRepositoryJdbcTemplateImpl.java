@@ -1,6 +1,7 @@
 package repositories;
 
 import models.Product;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -45,7 +46,11 @@ public class ProductRepositoryJdbcTemplateImpl implements ProductRepository {
 
     @Override
     public Product find(Long id) {
-        return jdbcTemplate.queryForObject(SQL_SELECT_PRODUCT_BY_ID, productRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(SQL_SELECT_PRODUCT_BY_ID, productRowMapper, id);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     @Override

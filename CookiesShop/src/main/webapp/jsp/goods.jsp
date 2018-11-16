@@ -24,13 +24,97 @@
 </head>
 <script>
     function sendGood(id) {
-            $.ajax({
-                type: 'POST',
-                url: '/goods',
-                data: {
-                    product_id: id
-                }
-            }).done(function (data) {
+        $.ajax({
+            type: 'POST',
+            url: '/goods',
+            data: {
+                product_id: id
+            }
+        }).done(function (data) {
+            console.log(data);
+            let tableHtml = "";
+            tableHtml += '<table>';
+            tableHtml +=
+                '<tr>' +
+                '<th>' +
+                'id' +
+                '</th>' +
+                '<th>' +
+                'name' +
+                '</th>' +
+                '</tr>';
+            for (let i = 0; i < data.length; i++) {
+                tableHtml += '<tr>' +
+                    '<td>' + data[i].id + '</td>' +
+                    '<td>' + data[i].name + '</td>' +
+                    '<td>' + '<button onclick="deleteProduct(data[i].id)" formaction="delete" id=' + data[i].id + 'name="T-Shirt">Delete</button>' + '</td>' +
+                    '</tr>';
+            }
+            tableHtml += '</table>';
+            $("#goods_table").html(tableHtml);
+        }).fail(function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            alert(msg)
+        })
+    }
+</script>
+
+<script>
+    function deleteProduct(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/goods',
+            data: {
+                product_id: id,
+                action: 'delete'
+            }
+        }).done(function (data) {
+
+        }).fail(function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            alert(msg)
+        });
+    }
+</script>
+<script>
+    function getData() {
+        $.ajax({
+            url: "/goods.json",
+            type: "GET",
+            data_type:"json"
+        })
+            .done(function (data) {
+                console.log(data);
                 let tableHtml = "";
                 tableHtml += '<table>';
                 tableHtml +=
@@ -47,54 +131,36 @@
                     tableHtml += '<tr>' +
                         '<td>' + data[i].id + '</td>' +
                         '<td>' + data[i].name + '</td>' +
+                        '<td>' + '<button onclick="deleteProduct(data[i].id)" formaction="delete" id=' + data[i].id +'name="T-Shirt">Delete</button>' + '</td>'+
                         '</tr>';
                 }
                 tableHtml += '</table>';
                 $("#goods_table").html(tableHtml);
-            }).fail(function () {
-                alert('ALL BAD')
-            });
-    }
-</script>
-
-<script>
-    function getData(){
-    $.ajax({
-        url : "/goods",
-        dataType : 'json',
-        error : function() {
-
-            alert("Error");
-        },
-        success : function(data) {
-            let tableHtml = "";
-            tableHtml += '<table>';
-            tableHtml +=
-                '<tr>' +
-                '<th>' +
-                'id' +
-                '</th>' +
-                '<th>' +
-                'name' +
-                '</th>' +
-                '</tr>';
-
-            for (let i = 0; i < data.length; i++) {
-                tableHtml += '<tr>' +
-                    '<td>' + data[i].id + '</td>' +
-                    '<td>' + data[i].name + '</td>' +
-                    '</tr>';
+            }).fail(function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
             }
-            tableHtml += '</table>';
-            $("#goods_table").html(tableHtml);
-        }
+            alert(msg)
         });
     }
 </script>
-<body>
+<body onload="getData()">
 
 <p style="text-align: center">
-    <button onclick="sendGood(1)" id="good_1" name="T-Shirt">T-Shirt</button>
+    <button  onclick="sendGood(1)" id="good_1" name="T-Shirt">T-Shirt</button>
 <p style="text-align: center">
     <button onclick="sendGood(2)" id="good_2" name="Skirt">Skirt</button>
 <p style="text-align: center">
@@ -103,8 +169,8 @@
 <div id="goods_table">
 
 </div>
-<button onclick="getData()" class="layer2"><img src="images/bucket.png"
-                                                height="64" width="64">
+<button onclick="sendGood()" class="layer2"><img src="images/bucket.png"
+                                                 height="64" width="64">
 </button>
 </body>
 </html>

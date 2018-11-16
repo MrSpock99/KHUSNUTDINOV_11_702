@@ -43,11 +43,6 @@ public class LoginServiceImpl implements LoginService {
                     .user(user)
                     .build();
             authRepository.save(auth);
-
-            Current.USER_EMAIL = user.getEmail();
-            Current.USER_HASH_PASSWORD = user.getHashPassword();
-            Current.USER_ID = user.getId();
-
             return Optional.of(cookieValue);
         } else return Optional.empty();
     }

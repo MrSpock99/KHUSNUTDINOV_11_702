@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import models.Cart;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import repositories.*;
-import services.ShopService;
 import services.LoginService;
 import services.LoginServiceImpl;
+import services.ShopService;
 import services.ShopServiceImpl;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -17,15 +18,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/goods")
-public class GoodsServlet extends HttpServlet {
+@WebServlet("/goods.json")
+public class JsonDataServlet extends HttpServlet {
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    private LoginService loginService;
+    private ShopService shopService;
     private AuthRepository authRepository;
     private CartRepository cartRepository;
     private ProductRepository productRepository;
-    private ObjectMapper mapper = new ObjectMapper();
-    private LoginService loginService;
-    private ShopService shopService;
-
 
     @Override
     public void init() throws ServletException {
@@ -39,43 +41,18 @@ public class GoodsServlet extends HttpServlet {
         cartRepository = new CartRepositoryJdbcImpl(dataSource);
         productRepository = new ProductRepositoryJdbcTemplateImpl(dataSource);
         loginService = new LoginServiceImpl(authRepository, usersRepository);
-        shopService = new ShopServiceImpl(cartRepository,productRepository);
+        shopService = new ShopServiceImpl(cartRepository, productRepository);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/jsp/goods.jsp").forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // достаешь id продукта
-        // достаешь куку пользователя
-        // добавляешь этот продукт в корзину этого пользователя
-        // достаешь все продукты из этой корзины
-        // отправляешь клиенту джейсон
-
-        String productIdStr = (req.getParameter("product_id"));
-        Long productId;
-
-     /*   if (req.getParameter("action").equals("delete")) {
-            int a = 1;
-        }
-*/
-        if (productIdStr != null){
-            productId = Long.valueOf(productIdStr);
-        }else {
-            productId = null;
-        }
-
         Cookie[] cookies = req.getCookies();
 
         if (cookies == null) {
             cookies = new Cookie[0];
         }
 
-        Cart cart = shopService.buy(productId, cookies, loginService);
-
+        Cart cart = shopService.getUserCart(loginService, cookies);
         String resultJson = mapper.writeValueAsString(cart.getProductList());
 
         resp.setStatus(200);

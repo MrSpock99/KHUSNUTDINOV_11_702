@@ -14,5 +14,4 @@ public class Product implements Serializable {
     private String name;
     private Integer cost;
     private static final long serialVersionUID = 1113799434508676095L;
-
 }
