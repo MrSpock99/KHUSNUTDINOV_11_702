@@ -61,5 +61,4 @@ public class LoginServlet extends HttpServlet {
             resp.setStatus(403);
         }
     }
-
 }

@@ -8,6 +8,7 @@ import services.ShopService;
 import services.LoginService;
 import services.LoginServiceImpl;
 import services.ShopServiceImpl;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -39,7 +40,7 @@ public class GoodsServlet extends HttpServlet {
         cartRepository = new CartRepositoryJdbcImpl(dataSource);
         productRepository = new ProductRepositoryJdbcTemplateImpl(dataSource);
         loginService = new LoginServiceImpl(authRepository, usersRepository);
-        shopService = new ShopServiceImpl(cartRepository,productRepository);
+        shopService = new ShopServiceImpl(cartRepository, productRepository);
     }
 
     @Override
@@ -58,13 +59,9 @@ public class GoodsServlet extends HttpServlet {
         String productIdStr = (req.getParameter("product_id"));
         Long productId;
 
-     /*   if (req.getParameter("action").equals("delete")) {
-            int a = 1;
-        }
-*/
-        if (productIdStr != null){
+        if (productIdStr != null) {
             productId = Long.valueOf(productIdStr);
-        }else {
+        } else {
             productId = null;
         }
 
@@ -74,9 +71,16 @@ public class GoodsServlet extends HttpServlet {
             cookies = new Cookie[0];
         }
 
-        Cart cart = shopService.buy(productId, cookies, loginService);
-
-        String resultJson = mapper.writeValueAsString(cart.getProductList());
+        Cart cart = null;
+        switch (req.getParameter("action")){
+            case "delete":
+                cart = shopService.deleteFromCart(productId, cookies, loginService);
+                break;
+            case "buy":
+                cart = shopService.buy(productId, cookies, loginService);
+                break;
+        }
+        String resultJson = mapper.writeValueAsString(cart.getProductsCount());
 
         resp.setStatus(200);
         resp.setContentType("application/json");

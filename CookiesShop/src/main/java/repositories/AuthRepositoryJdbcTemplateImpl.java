@@ -9,9 +9,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-public class AuthRepositoryJdbcTemplateImpl implements AuthRepository{
-
-
+public class AuthRepositoryJdbcTemplateImpl implements AuthRepository {
     //language=SQL
     private static final String SQL_INSERT =
             "insert into auth(user_id, cookie_value) values (?, ?)";
@@ -63,10 +61,5 @@ public class AuthRepositoryJdbcTemplateImpl implements AuthRepository{
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public Optional<Auth> findCurrent() {
-        return Optional.empty();
     }
 }

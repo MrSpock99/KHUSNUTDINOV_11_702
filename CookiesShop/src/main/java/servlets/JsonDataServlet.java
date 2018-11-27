@@ -53,7 +53,7 @@ public class JsonDataServlet extends HttpServlet {
         }
 
         Cart cart = shopService.getUserCart(loginService, cookies);
-        String resultJson = mapper.writeValueAsString(cart.getProductList());
+        String resultJson = mapper.writeValueAsString(cart.getProductsCount());
 
         resp.setStatus(200);
         resp.setContentType("application/json");

@@ -28,26 +28,26 @@
             type: 'POST',
             url: '/goods',
             data: {
-                product_id: id
+                product_id: id,
+                action: 'buy'
             }
         }).done(function (data) {
-            console.log(data);
             let tableHtml = "";
             tableHtml += '<table>';
             tableHtml +=
                 '<tr>' +
                 '<th>' +
-                'id' +
-                '</th>' +
-                '<th>' +
                 'name' +
                 '</th>' +
+                '<th>' +
+                'quantity' +
+                '</th>' +
                 '</tr>';
-            for (let i = 0; i < data.length; i++) {
+            for (var key in data) {
                 tableHtml += '<tr>' +
-                    '<td>' + data[i].id + '</td>' +
-                    '<td>' + data[i].name + '</td>' +
-                    '<td>' + '<button onclick="deleteProduct(data[i].id)" formaction="delete" id=' + data[i].id + 'name="T-Shirt">Delete</button>' + '</td>' +
+                    '<td>' + getProductName(key) + '</td>' +
+                    '<td>' + data[key] + '</td>' +
+                    '<td>' + '<button onclick="deleteProduct(' + getProductId(key) + ')" formaction="delete" id=' + 1 + '>Delete</button>' + '</td>' +
                     '</tr>';
             }
             tableHtml += '</table>';
@@ -84,7 +84,27 @@
                 action: 'delete'
             }
         }).done(function (data) {
-
+            console.log(data);
+            let tableHtml = "";
+            tableHtml += '<table>';
+            tableHtml +=
+                '<tr>' +
+                '<th>' +
+                'name' +
+                '</th>' +
+                '<th>' +
+                'quantity' +
+                '</th>' +
+                '</tr>';
+            for (var key in data) {
+                tableHtml += '<tr>' +
+                    '<td>' + getProductName(key) + '</td>' +
+                    '<td>' + data[key] + '</td>' +
+                    '<td>' + '<button onclick="deleteProduct(' + getProductId(key) + ')" formaction="delete" id=' + 1 + '>Delete</button>' + '</td>' +
+                    '</tr>';
+            }
+            tableHtml += '</table>';
+            $("#goods_table").html(tableHtml);
         }).fail(function (jqXHR, exception) {
             var msg = '';
             if (jqXHR.status === 0) {
@@ -111,7 +131,7 @@
         $.ajax({
             url: "/goods.json",
             type: "GET",
-            data_type:"json"
+            data_type: "json"
         })
             .done(function (data) {
                 console.log(data);
@@ -120,18 +140,18 @@
                 tableHtml +=
                     '<tr>' +
                     '<th>' +
-                    'id' +
+                    'name' +
                     '</th>' +
                     '<th>' +
-                    'name' +
+                    'quantity' +
                     '</th>' +
                     '</tr>';
 
-                for (let i = 0; i < data.length; i++) {
+                for (var key in data) {
                     tableHtml += '<tr>' +
-                        '<td>' + data[i].id + '</td>' +
-                        '<td>' + data[i].name + '</td>' +
-                        '<td>' + '<button onclick="deleteProduct(data[i].id)" formaction="delete" id=' + data[i].id +'name="T-Shirt">Delete</button>' + '</td>'+
+                        '<td>' + getProductName(key) + '</td>' +
+                        '<td>' + data[key] + '</td>' +
+                        '<td>' + '<button onclick="deleteProduct(' + getProductId(key) + ')" formaction="delete" id=' + 1 + '>Delete</button>' + '</td>' +
                         '</tr>';
                 }
                 tableHtml += '</table>';
@@ -156,21 +176,30 @@
             alert(msg)
         });
     }
+
+    function getProductId(key) {
+        return key.substring(key.indexOf("=") + 1, key.indexOf(","));
+    }
+
+    function getProductName(key) {
+        return key.substring(key.indexOf("=", key.indexOf("=") + 1) + 1, key.indexOf(",", key.indexOf(",") + 1));
+    }
 </script>
+
 <body onload="getData()">
 
 <p style="text-align: center">
-    <button  onclick="sendGood(1)" id="good_1" name="T-Shirt">T-Shirt</button>
+    <button onclick="sendGood(1)" name="T-Shirt">T-Shirt</button>
 <p style="text-align: center">
-    <button onclick="sendGood(2)" id="good_2" name="Skirt">Skirt</button>
+    <button onclick="sendGood(2)" name="Skirt">Skirt</button>
 <p style="text-align: center">
-    <button onclick="sendGood(3)" id="good_3" name="Jacket">Jacket</button>
+    <button onclick="sendGood(3)" name="Jacket">Jacket</button>
 
 <div id="goods_table">
 
 </div>
-<button onclick="sendGood()" class="layer2"><img src="images/bucket.png"
-                                                 height="64" width="64">
+<button onclick="getData()" class="layer2"><img src="images/bucket.png"
+                                                height="64" width="64">
 </button>
 </body>
 </html>

@@ -28,7 +28,6 @@ public class ProductRepositoryJdbcTemplateImpl implements ProductRepository {
     private static final String SQL_UPDATE_PRODUCT =
             "update product set(name,cost) = (?,?) where id = ?";
 
-
     private RowMapper<Product> productRowMapper = (resultSet, i) -> Product.builder()
             .id(resultSet.getLong("id"))
             .name(resultSet.getString("name"))
