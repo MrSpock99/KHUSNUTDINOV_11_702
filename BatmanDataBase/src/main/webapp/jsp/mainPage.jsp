@@ -8,9 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -38,16 +36,15 @@
 
 </head>
 
-<body id="page-top">
+<body onload="getUserName()" id="page-top">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
     <a class="navbar-brand js-scroll-trigger" href="#page-top">
-        <span class="d-block d-lg-none">Welcome, Bruce Wayne</span>
+        <span class="d-block d-lg-none">Welcome</span>
         <span class="d-none d-lg-block">
           <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/bat_logo.png" alt="">
         </span>
     </a>
-
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -87,7 +84,7 @@
     <section class="resume-section p-3 p-lg-5 d-flex d-column" id="welcome">
         <div class="my-auto">
             <h1 class="mb-0">Welcome,
-                <span class="text-primary">Bruce Wayne</span>
+                <span id="user_name" class="text-primary">Bruce Wayne</span>
             </h1>
         </div>
     </section>
@@ -536,6 +533,37 @@
 
 <!-- Custom scripts for this template -->
 <script src="js/resume.min.js"></script>
+<script>
+    function getUserName() {
+        $.ajax({
+            url: "/mainPage.json",
+            type: "GET",
+            data_type: "json"
+        })
+            .done(function (data) {
+                console.log(data);
+                $("#user_name").text(data); // setting text
+            }).fail(function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            alert(msg)
+        });
+    }
+</script>
 </body>
 
 </html>

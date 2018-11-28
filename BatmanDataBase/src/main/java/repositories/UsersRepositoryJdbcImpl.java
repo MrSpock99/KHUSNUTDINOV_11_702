@@ -2,13 +2,15 @@ package repositories;
 
 import lombok.SneakyThrows;
 import models.User;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import javax.sql.DataSource;
 import java.util.List;
 
 public class UsersRepositoryJdbcImpl implements UsersRepository {
+    private JdbcTemplate jdbcTemplate;
     //language=sql
     private static final String SQL_FIND_BY_ID =
             "select * from db_user where id = ?";
@@ -22,31 +24,22 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     //language=sql
     private static final String SQL_INSERT_USER =
             "insert into db_user(name, email, hash_password) values (?, ?, ?)";
-    private Connection connection;
-    private PreparedStatement findByIdStatement;
-    private PreparedStatement findByEmailStatement;
-    private PreparedStatement updateByIdStatement;
-    private PreparedStatement insertStatement;
 
-    @SneakyThrows
-    public UsersRepositoryJdbcImpl(Connection connection) {
-        this.connection = connection;
-        findByIdStatement = connection.prepareStatement(SQL_FIND_BY_ID);
-        updateByIdStatement = connection.prepareStatement(SQL_UPDATE_BY_ID);
-        insertStatement = connection.prepareStatement(SQL_INSERT_USER);
-        findByEmailStatement = connection.prepareStatement(SQL_FIND_BY_EMAIL);
+    private RowMapper<User> userRowMapper = (resultSet, i) -> User.builder()
+            .id(resultSet.getLong("id"))
+            .name(resultSet.getString("name"))
+            .email(resultSet.getString("email"))
+            .hashPassword(resultSet.getString("hash_password"))
+            .build();
+
+    public UsersRepositoryJdbcImpl(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     @SneakyThrows
     public void save(User model) {
-        insertStatement.setString(1, model.getName());
-        insertStatement.setString(2, model.getEmail());
-        insertStatement.setString(3, model.getHashPassword());
-        int affectedRows = insertStatement.executeUpdate();
-        if (affectedRows != 1) {
-            throw new IllegalArgumentException("SQL Exception");
-        }
+        jdbcTemplate.update(SQL_INSERT_USER, model.getEmail(), model.getName(), model.getHashPassword());
     }
 
     @Override
@@ -62,15 +55,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     @Override
     @SneakyThrows
     public User findOne(Long id) {
-        findByIdStatement.setLong(1, id);
-        ResultSet resultSet = findByIdStatement.executeQuery();
-        resultSet.next();
-        return User.builder()
-                .id(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .email(resultSet.getString("email"))
-                .hashPassword(resultSet.getString("hash_password"))
-                .build();
+        return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, userRowMapper, id);
     }
 
     @Override
@@ -81,15 +66,10 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     @Override
     @SneakyThrows
     public User findByEmail(String email) {
-        findByEmailStatement.setString(1, email);
-        ResultSet resultSet = findByEmailStatement.executeQuery();
-        resultSet.next();
-
-        return User.builder()
-                .id(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .email(resultSet.getString("email"))
-                .hashPassword(resultSet.getString("hash_password"))
-                .build();
+        try {
+            return jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, userRowMapper, email);
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 }

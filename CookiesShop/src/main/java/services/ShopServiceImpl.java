@@ -20,7 +20,6 @@ public class ShopServiceImpl implements ShopService {
         this.productRepository = productRepository;
     }
 
-
     @Override
     public Cart buy(Long productId, Cookie[] cookies, LoginService loginService) {
         Product product = productRepository.find(productId);
