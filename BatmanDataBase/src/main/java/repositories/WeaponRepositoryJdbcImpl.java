@@ -3,6 +3,7 @@ package repositories;
 import lombok.SneakyThrows;
 import models.Ammo;
 import models.Weapon;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -27,11 +28,12 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
                     "from weapon_ammo\n" +
                     "       join ammo a on ammo_id = a.id\n" +
                     "       join weapon w on weapon_id = w.id\n;";
-
     //language=sql
     private static final String SQL_DELETE_BY_ID =
             "delete from weapon_ammo where id = ?";
-
+    //language=sql
+    private static final String SQL_INSERT =
+            "insert into weapon_ammo (weapon_id, ammo_id, name) VALUES (?,?,?)";
 
     private RowMapper<Weapon> weaponRowMapper = (row, rowNum) -> {
         Weapon weapon = new Weapon();
@@ -54,8 +56,8 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
     }
 
     @Override
-    public void save(Weapon model) {
-
+    public boolean save(Weapon model) {
+        return template.update(SQL_INSERT, model.getId(), model.getAmmo().getId(), model.getName()) > 0;
     }
 
     @Override
@@ -71,7 +73,11 @@ public class WeaponRepositoryJdbcImpl implements WeaponRepository {
     @Override
     @SneakyThrows
     public Weapon findOne(Long id) {
-        return template.queryForObject(SQL_FIND_BY_ID, weaponRowMapper, id);
+        try {
+            return template.queryForObject(SQL_FIND_BY_ID, weaponRowMapper, id);
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     @Override

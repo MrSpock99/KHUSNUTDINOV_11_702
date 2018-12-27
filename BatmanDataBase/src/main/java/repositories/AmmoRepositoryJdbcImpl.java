@@ -16,6 +16,8 @@ public class AmmoRepositoryJdbcImpl implements AmmoRepository {
     //language=sql
     private static final String SQL_SELECT_ALL =
             "select * from ammo";
+    //language=sql
+    private static final String SQL_INSERT = "insert into ammo (name, amount) values (?,?)";
     private JdbcTemplate template;
     private RowMapper<Ammo> ammoRowMapper = (row, rowNum) -> {
         Ammo ammo = new Ammo();
@@ -31,8 +33,8 @@ public class AmmoRepositoryJdbcImpl implements AmmoRepository {
     }
 
     @Override
-    public void save(Ammo model) {
-
+    public boolean save(Ammo model) {
+        return template.update(SQL_INSERT, ammoRowMapper, model.getName(), model.getAmount()) > 0;
     }
 
     @Override

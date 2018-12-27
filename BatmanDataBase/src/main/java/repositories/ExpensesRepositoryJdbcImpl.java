@@ -14,6 +14,9 @@ public class ExpensesRepositoryJdbcImpl implements ExpensesRepository {
     //language=sql
     private static final String SQL_DELETE_BY_ID =
             "delete from expense where id = ?";
+    //language=sql
+    private static final String SQL_INSERT =
+            "insert into expense (name, type, cost, amount, budget) VALUES (?,?,?,?,?)";
     private JdbcTemplate template;
     private RowMapper<Expenses> expensesRowMapper = (row, rowNum) -> Expenses.builder()
             .id(row.getLong("id"))
@@ -29,8 +32,9 @@ public class ExpensesRepositoryJdbcImpl implements ExpensesRepository {
     }
 
     @Override
-    public void save(Expenses model) {
-
+    public boolean save(Expenses model) {
+        return template.update(SQL_INSERT, model.getName(), model.getType(),
+                model.getCost(), model.getAmount(), model.getBudget()) > 0;
     }
 
     @Override

@@ -37,8 +37,8 @@ public class AuthRepositoryJdbcTemplateImpl implements AuthRepository {
     }
 
     @Override
-    public void save(Auth model) {
-        template.update(SQL_INSERT, model.getUser().getId(), model.getCookieValue());
+    public boolean save(Auth model) {
+        return template.update(SQL_INSERT, model.getUser().getId(), model.getCookieValue()) > 0;
     }
 
     @Override

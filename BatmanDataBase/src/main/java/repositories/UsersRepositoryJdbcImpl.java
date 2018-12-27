@@ -41,8 +41,8 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     @Override
     @SneakyThrows
-    public void save(User model) {
-        jdbcTemplate.update(SQL_INSERT_USER, model.getEmail(), model.getName(), model.getHashPassword());
+    public boolean save(User model) {
+        return jdbcTemplate.update(SQL_INSERT_USER, model.getEmail(), model.getName(), model.getHashPassword()) > 0;
     }
 
     @Override

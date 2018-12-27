@@ -13,8 +13,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 public class MainPageServlet extends HttpServlet {
     private InformationService informationService;
@@ -23,11 +25,14 @@ public class MainPageServlet extends HttpServlet {
     @SneakyThrows
     @Override
     public void init() {
+        Properties properties = new Properties();
+        properties.load(new FileReader("C:\\Users\\khusn\\Desktop\\University\\KHUSNUTDINOV_11_702\\BatmanDataBase\\src\\main\\resources\\ru.itis\\application.properties"));
+
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("Metallica1981");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/batman_db");
+        dataSource.setUsername(properties.getProperty("db.user"));
+        dataSource.setPassword(properties.getProperty("db.password"));
+        dataSource.setUrl(properties.getProperty("db.url"));
 
         informationService = new InformationServiceImpl(new SubjectsRepositoryJdbcImpl(dataSource),
                 new WeaponRepositoryJdbcImpl(dataSource), new AmmoRepositoryJdbcImpl(dataSource),
@@ -65,15 +70,41 @@ public class MainPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = Long.valueOf(req.getParameter("entity_id"));
+        String idStr = req.getParameter("entity_id");
+        Long id = null;
+        if (idStr != null) {
+            id = Long.valueOf(idStr);
+        }
         String tableName = req.getParameter("table_name");
 
         String action = req.getParameter("action");
 
         if (action.equals("delete")) {
             if (editService.deleteEntity(tableName, id)) {
-                System.out.println("SUCCESS DELETE");
                 resp.setStatus(200);
+                return;
+            }
+        } else if (action.equals("add")) {
+            String[] entity = req.getParameterValues("entity[]");
+            switch (tableName) {
+                case "subject":
+                    editService.saveSubject(entity);
+                    resp.setStatus(200);
+                    break;
+                case "weapon":
+                    editService.saveWeapon(entity);
+                    resp.setStatus(200);
+                    break;
+                case "equipment":
+                    editService.saveEquipment(entity);
+                    resp.setStatus(200);
+                    break;
+                case "transport":
+                    editService.saveTransport(entity);
+                    break;
+                case "expense":
+                    editService.saveExpense(entity);
+                    break;
             }
         }
     }

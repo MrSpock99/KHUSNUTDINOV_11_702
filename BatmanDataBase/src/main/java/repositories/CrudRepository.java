@@ -3,7 +3,7 @@ package repositories;
 import java.util.List;
 
 public interface CrudRepository<T, V> {
-    void save(T model);
+    boolean save(T model);
 
     void update(T model);
 

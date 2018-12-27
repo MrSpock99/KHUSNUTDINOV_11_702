@@ -14,6 +14,9 @@ public class TransportRepositoryImpl implements TransportRepository {
     //language=sql
     private static final String SQL_DELETE_BY_ID =
             "delete from transport where id = ?";
+    //language=sql
+    private static final String SQL_INSERT =
+            "insert into transport (name, water, air, ground,image_base_64) VALUES (?,?,?,?,?)";
     private JdbcTemplate template;
 
     private RowMapper<Transport> transportRowMapper = (row, rowNum) -> {
@@ -23,6 +26,7 @@ public class TransportRepositoryImpl implements TransportRepository {
         transport.setAir(row.getBoolean("air"));
         transport.setGround(row.getBoolean("ground"));
         transport.setWater(row.getBoolean("water"));
+        transport.setImageBase64(row.getString("image_base_64"));
         return transport;
     };
 
@@ -31,8 +35,9 @@ public class TransportRepositoryImpl implements TransportRepository {
     }
 
     @Override
-    public void save(Transport model) {
-
+    public boolean save(Transport model) {
+        return template.update(SQL_INSERT, model.getName(),
+                model.isWater(), model.isAir(), model.isGround(), model.getImageBase64()) > 0;
     }
 
     @Override

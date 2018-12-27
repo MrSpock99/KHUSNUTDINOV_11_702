@@ -14,16 +14,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Properties;
 
-/**
- * 12.10.2018
- * SignUpServlet
- *
- * @author Sidikov Marsel (First Software Engineering Platform)
- * @version v1.0
- */
 public class SignUpServlet extends HttpServlet {
 
     private LoginServiceImpl loginService;
@@ -31,11 +26,14 @@ public class SignUpServlet extends HttpServlet {
     @SneakyThrows
     @Override
     public void init() {
+        Properties properties = new Properties();
+        properties.load(new FileReader("C:\\Users\\khusn\\Desktop\\University\\KHUSNUTDINOV_11_702\\BatmanDataBase\\src\\main\\resources\\ru.itis\\application.properties"));
+
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("Metallica1981");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/batman_db");
+        dataSource.setUsername(properties.getProperty("db.user"));
+        dataSource.setPassword(properties.getProperty("db.password"));
+        dataSource.setUrl(properties.getProperty("db.url"));
 
         UsersRepository usersRepository = new UsersRepositoryJdbcImpl(dataSource);
         AuthRepository authRepository = new AuthRepositoryJdbcTemplateImpl(dataSource);

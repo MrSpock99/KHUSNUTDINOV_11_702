@@ -10,9 +10,9 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class BatmanThings {
+    private Long id;
     private String name;
     private int amount;
-    private Long id;
     private String imageBase64;
 
     public BatmanThings() {

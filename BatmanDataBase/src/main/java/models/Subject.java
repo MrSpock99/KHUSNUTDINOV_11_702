@@ -7,6 +7,8 @@ import lombok.*;
 @EqualsAndHashCode
 @Builder
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Subject {
     private Long id;
     //Вымышленное имя

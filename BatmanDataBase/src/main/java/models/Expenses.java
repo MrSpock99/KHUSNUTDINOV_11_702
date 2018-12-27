@@ -1,14 +1,13 @@
 package models;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Expenses {
     private Long id;
     private String name;

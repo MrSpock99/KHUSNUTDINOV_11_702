@@ -2,6 +2,7 @@ package repositories;
 
 import lombok.SneakyThrows;
 import models.Equipment;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -19,6 +20,9 @@ public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
     //language=sql
     private static final String SQL_DELETE_BY_ID =
             "delete from equipment where id = ?";
+    private static final String SQL_INSERT =
+            "insert into equipment (name, bullet, knife, explosion, amount, image_base_64) values (?,?,?,?,?,?);";
+
     private JdbcTemplate template;
 
     private RowMapper<Equipment> equipmentRowMapper = (row, rowNum) -> {
@@ -37,8 +41,9 @@ public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
     }
 
     @Override
-    public void save(Equipment model) {
-
+    public boolean save(Equipment model) {
+        return template.update(SQL_INSERT, model.getName(),
+                model.getBullet(), model.getKnife(), model.getExplosion(), model.getAmount(), model.getImageBase64()) > 0;
     }
 
     @Override
@@ -48,13 +53,17 @@ public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
 
     @Override
     public boolean delete(Long id) {
-        return template.update(SQL_DELETE_BY_ID, equipmentRowMapper, id) > 0;
+        return template.update(SQL_DELETE_BY_ID, id) > 0;
     }
 
     @Override
     @SneakyThrows
     public Equipment findOne(Long id) {
-        return template.queryForObject(SQL_FIND_BY_ID, equipmentRowMapper, id);
+        try {
+            return template.queryForObject(SQL_FIND_BY_ID, equipmentRowMapper, id);
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     @Override

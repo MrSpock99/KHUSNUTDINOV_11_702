@@ -1,11 +1,9 @@
 package models;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode
 public class Transport extends BatmanThings {
     //Может плавать

@@ -74,8 +74,8 @@ public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
 
     @Override
     @SneakyThrows
-    public void save(Subject model) {
-        template.update(SQL_INSERT_NAME, model.getAlias(), model.getRealName(), model.getType().name());
+    public boolean save(Subject model) {
+        return template.update(SQL_INSERT_NAME, model.getAlias(), model.getRealName(), model.getType().name()) > 0;
     }
 
     @Override
