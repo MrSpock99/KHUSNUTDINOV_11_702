@@ -19,5 +19,7 @@ public class Subject {
     private Equipment defence;
     //Злодей или герой
     private SubjectType type;
+    //Изображение
+    private String imageBase64;
 }
 

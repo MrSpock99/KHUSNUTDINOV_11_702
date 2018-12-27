@@ -2,5 +2,5 @@ package repositories;
 
 import models.Ammo;
 
-interface AmmoRepository extends CrudRepository<Ammo, Long> {
+public interface AmmoRepository extends CrudRepository<Ammo, Long> {
 }

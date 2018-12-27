@@ -1,8 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Title</title>
-    <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 </head>
 <body>

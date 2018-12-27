@@ -1,19 +1,19 @@
 package models;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Setter
 @Getter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Equipment extends BatmanThings {
     //Пуленепробиваемость
-    private boolean bullet;
+    private Boolean bullet;
     //Неуязвимость против ножей
-    private boolean knife;
+    private Boolean knife;
     //Устойчивость к взрывам
-    private boolean explosion;
+    private Boolean explosion;
 }
 
 

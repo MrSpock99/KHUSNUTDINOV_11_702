@@ -24,6 +24,9 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     //language=sql
     private static final String SQL_INSERT_USER =
             "insert into db_user(name, email, hash_password) values (?, ?, ?)";
+    //language=sql
+    private static final String SQL_DELETE_BY_ID =
+            "delete from db_user where id = ?";
 
     private RowMapper<User> userRowMapper = (resultSet, i) -> User.builder()
             .id(resultSet.getLong("id"))
@@ -48,8 +51,8 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public boolean delete(Long id) {
+        return jdbcTemplate.update(SQL_DELETE_BY_ID, id) > 0;
     }
 
     @Override

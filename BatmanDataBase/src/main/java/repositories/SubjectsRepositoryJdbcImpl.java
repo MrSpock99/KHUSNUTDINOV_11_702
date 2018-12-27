@@ -3,132 +3,104 @@ package repositories;
 import lombok.SneakyThrows;
 import models.Subject;
 import models.SubjectType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
 
     //language=sql
     private static final String SQL_FIND_BY_ALIAS =
-            "select * from subjects where alias = ?";
+            "select * from subject where alias = ?";
     //language=sql
     private static final String SQL_FIND_BY_ID =
-            "select * from subjects where id = ?";
+            "select * from subject where id = ?";
     //language=sql
     private static final String SQL_INSERT_NAME =
-            "insert into subjects (alias, real_name, type) values (?,?,?)";
+            "insert into subject (alias, real_name, type) values (?,?,?)";
     //language=sql
     private static final String SQL_DELETE_BY_ID =
-            "delete from subjects where id = ?";
+            "delete from subject where id = ?";
     //language=sql
     private static final String SQL_SELECT_ALL =
-            "select * from subjects";
+            "select * from subject";
+    //language=sql
+    private static final String SQL_SELECT_ALL_HEROES =
+            "select * from subject where type = 'HERO'";
+    //language=sql
+    private static final String SQL_SELECT_ALL_VILLAINS =
+            "select * from subject where type = 'VILLAIN'";
     //language=sql
     private static final String SQL_UPDATE_ALL_BY_ID =
-            "update subjects set alias = ?, real_name = ?,weaknes_id = ?, defence_id = ?, type = ?   where id = ?";
-    private Connection connection;
+            "update subject set alias = ?, real_name = ?,weakness_id = ?, defence_id = ?, type = ?   where id = ?";
     private WeaponRepositoryJdbcImpl weapon;
     private EquipmentRepositoryJdbcImpl equipment;
-    private PreparedStatement statement;
+    private JdbcTemplate template;
+    private RowMapper<Subject> subjectRowMapper = (row, rowNum) -> Subject.builder()
+            .id(row.getLong("id"))
+            .alias(row.getString("alias"))
+            .realName(row.getString("real_name"))
+            .type(SubjectType.valueOf(row.getString("type")))
+            .defence(equipment.findOne(row.getLong("defence_id")))
+            .weakness(weapon.findOne(row.getLong("weakness_id")))
+            .imageBase64(row.getString("image_base_64"))
+            .build();
 
     @SneakyThrows
-    public SubjectsRepositoryJdbcImpl(Connection connection) {
-        this.connection = connection;
-        statement = connection.prepareStatement(SQL_FIND_BY_ALIAS);
-        weapon = new WeaponRepositoryJdbcImpl(connection);
-        equipment = new EquipmentRepositoryJdbcImpl(connection);
-
+    public SubjectsRepositoryJdbcImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
+        weapon = new WeaponRepositoryJdbcImpl(dataSource);
+        equipment = new EquipmentRepositoryJdbcImpl(dataSource);
     }
 
     @Override
     @SneakyThrows
     public Subject findByAlias(String alias) {
-        statement = connection.prepareStatement(SQL_FIND_BY_ALIAS);
-        statement.setString(1, alias);
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
+        return template.queryForObject(SQL_FIND_BY_ALIAS, subjectRowMapper, alias);
+    }
 
-        return Subject.builder()
-                .id(resultSet.getLong("id"))
-                .alias(resultSet.getString("alias"))
-                .realName(resultSet.getString("real_name"))
-                .type(SubjectType.valueOf(resultSet.getString("type")))
-                .weakness(weapon.findOne(resultSet.getLong("weaknes_id")))
-                .defence(equipment.findOne(resultSet.getLong("defence_id")))
-                .build();
+    @Override
+    public Optional<List<Subject>> getHeroes() {
+        return Optional.of(template.query(SQL_SELECT_ALL_HEROES, subjectRowMapper));
+    }
+
+    @Override
+    public Optional<List<Subject>> getVillains() {
+        return Optional.of(template.query(SQL_SELECT_ALL_VILLAINS, subjectRowMapper));
     }
 
     @Override
     @SneakyThrows
     public void save(Subject model) {
-        statement = connection.prepareStatement(SQL_INSERT_NAME);
-        statement.setString(1, model.getAlias());
-        statement.setString(2, model.getRealName());
-        statement.setString(3, model.getType().name());
-
-        statement.execute();
+        template.update(SQL_INSERT_NAME, model.getAlias(), model.getRealName(), model.getType().name());
     }
 
     @Override
     @SneakyThrows
     public void update(Subject model) {
-        statement = connection.prepareStatement(SQL_UPDATE_ALL_BY_ID);
-        statement.setString(1, model.getAlias());
-        statement.setString(2, model.getRealName());
-        statement.setLong(3, model.getWeakness().getId());
-        statement.setLong(4, model.getDefence().getId());
-        statement.setString(5, model.getType().name());
-
-        statement.executeUpdate();
+        template.update(SQL_UPDATE_ALL_BY_ID, model.getAlias(),
+                model.getRealName(), model.getWeakness().getId(),
+                model.getDefence().getId(), model.getType().name());
     }
 
     @Override
     @SneakyThrows
-    public void delete(Long id) {
-        statement = connection.prepareStatement(SQL_DELETE_BY_ID);
-        statement.setLong(1, id);
-        statement.execute();
+    public boolean delete(Long id) {
+        return template.update(SQL_DELETE_BY_ID, id) > 0;
     }
 
     @Override
     @SneakyThrows
     public Subject findOne(Long id) {
-        statement = connection.prepareStatement(SQL_FIND_BY_ID);
-        statement.setLong(1, id);
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-
-        return Subject.builder()
-                .id(resultSet.getLong("id"))
-                .alias(resultSet.getString("alias"))
-                .realName(resultSet.getString("real_name"))
-                .type(SubjectType.valueOf(resultSet.getString("type")))
-                .weakness(weapon.findOne(resultSet.getLong("weaknes_id")))
-                .defence(equipment.findOne(resultSet.getLong("defence_id")))
-                .build();
+        return template.queryForObject(SQL_FIND_BY_ID, subjectRowMapper, id);
     }
 
     @Override
     @SneakyThrows
     public List findAll() {
-        statement = connection.prepareStatement(SQL_SELECT_ALL);
-        ResultSet resultSet = statement.executeQuery();
-
-        List<Subject> subjectList = new ArrayList<>();
-        while (resultSet.next()) {
-            subjectList.add(Subject.builder()
-                    .id(resultSet.getLong("id"))
-                    .alias(resultSet.getString("alias"))
-                    .realName(resultSet.getString("real_name"))
-                    .type(SubjectType.valueOf(resultSet.getString("type")))
-                    .weakness(weapon.findOne(resultSet.getLong("weaknes_id")))
-                    .defence(equipment.findOne(resultSet.getLong("defence_id")))
-                    .build());
-        }
-        return subjectList;
+        return template.query(SQL_SELECT_ALL, subjectRowMapper);
     }
 }

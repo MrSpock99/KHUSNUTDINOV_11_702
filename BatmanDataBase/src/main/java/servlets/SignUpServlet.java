@@ -31,13 +31,6 @@ public class SignUpServlet extends HttpServlet {
     @SneakyThrows
     @Override
     public void init() {
-//        Class.forName("org.postgresql.Driver");
-//        Properties properties = new Properties();
-//        properties.load(new FileReader("C:\\Users\\khusn\\Desktop\\University\\KHUSNUTDINOV_11_702\\BatmanDataBase\\src\\main\\resources\\ru.itis\\application.properties"));
-//        Connection connection =
-//                DriverManager.getConnection(properties.getProperty("db.url"),
-//                        properties.getProperty("db.user"),
-//                        properties.getProperty("db.password"));
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUsername("postgres");
@@ -51,7 +44,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/jsp/signUp.jsp").forward(req, resp);
+        req.getRequestDispatcher("/ftl/signUp.ftl").forward(req, resp);
     }
 
     @Override
@@ -79,25 +72,5 @@ public class SignUpServlet extends HttpServlet {
                 resp.setStatus(403);
             }
         }
-/*
-        if (req.getParameter("name") == null) {
-            userForm = UserForm.builder()
-                    .email(req.getParameter("email"))
-                    .password(req.getParameter("password"))
-                    .build();
-            if (loginService.registered(userForm)) {
-                loginService.signIn(userForm);
-                resp.sendRedirect("/mainPage");
-                return;
-            }
-        } else {
-            userForm = UserForm.builder()
-                    .name(req.getParameter("name"))
-                    .email(req.getParameter("email"))
-                    .password(req.getParameter("password"))
-                    .build();
-            loginService.signUp(userForm);
-            resp.sendRedirect("/signUp");
-        }*/
     }
 }

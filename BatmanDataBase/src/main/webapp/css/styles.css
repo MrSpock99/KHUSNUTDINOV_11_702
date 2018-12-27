@@ -6,6 +6,9 @@
     margin: auto;
 }
 
+p {
+    display: inline;
+}
 .form {
     position: relative;
     z-index: 1;

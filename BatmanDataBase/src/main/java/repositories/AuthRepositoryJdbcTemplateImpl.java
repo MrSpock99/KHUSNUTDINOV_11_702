@@ -42,8 +42,8 @@ public class AuthRepositoryJdbcTemplateImpl implements AuthRepository {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public boolean delete(Long id) {
+        return false;
     }
 
     @Override

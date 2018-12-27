@@ -2,10 +2,10 @@ package repositories;
 
 import lombok.SneakyThrows;
 import models.Equipment;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import javax.sql.DataSource;
 import java.util.List;
 
 public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
@@ -13,15 +13,27 @@ public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
     //language=sql
     private static final String SQL_FIND_BY_ID =
             "select * from equipment where id = ?";
-    private Connection connection;
-    private PreparedStatement findByIdStatement;
+    //language=sql
+    private static final String SQL_SELECT_ALL =
+            "select * from equipment";
+    //language=sql
+    private static final String SQL_DELETE_BY_ID =
+            "delete from equipment where id = ?";
+    private JdbcTemplate template;
 
+    private RowMapper<Equipment> equipmentRowMapper = (row, rowNum) -> {
+        Equipment equipment = new Equipment(row.getBoolean("bullet"),
+                row.getBoolean("knife"), row.getBoolean("explosion"));
+        equipment.setName(row.getString("name"));
+        equipment.setId(row.getLong("id"));
+        equipment.setImageBase64(row.getString("image_base_64"));
+        equipment.setAmount(row.getInt("amount"));
+        return equipment;
+    };
 
     @SneakyThrows
-    public EquipmentRepositoryJdbcImpl(Connection connection) {
-        this.connection = connection;
-        findByIdStatement = connection.prepareStatement(SQL_FIND_BY_ID);
-
+    public EquipmentRepositoryJdbcImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -35,31 +47,18 @@ public class EquipmentRepositoryJdbcImpl implements EquipmentRepository {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public boolean delete(Long id) {
+        return template.update(SQL_DELETE_BY_ID, equipmentRowMapper, id) > 0;
     }
 
     @Override
     @SneakyThrows
     public Equipment findOne(Long id) {
-        findByIdStatement.setLong(1, id);
-        ResultSet resultSet = findByIdStatement.executeQuery();
-        if (!resultSet.next()) {
-            return null;
-        }
-
-        Equipment equipment = new Equipment();
-        equipment.setId(resultSet.getLong("id"));
-        equipment.setName(resultSet.getString("name"));
-        equipment.setBullet(resultSet.getBoolean("bullet"));
-        equipment.setExplosion(resultSet.getBoolean("explosion"));
-        equipment.setKnife(resultSet.getBoolean("knife"));
-        equipment.setAmount(resultSet.getInt("amount"));
-        return equipment;
+        return template.queryForObject(SQL_FIND_BY_ID, equipmentRowMapper, id);
     }
 
     @Override
     public List<Equipment> findAll() {
-        return null;
+        return template.query(SQL_SELECT_ALL, equipmentRowMapper);
     }
 }
