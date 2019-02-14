@@ -2,22 +2,22 @@ package servlets;
 
 import forms.UserForm;
 import lombok.SneakyThrows;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import repositories.AuthRepository;
 import repositories.AuthRepositoryJdbcTemplateImpl;
 import repositories.UsersRepository;
 import repositories.UsersRepositoryJdbcImpl;
 import services.LoginServiceImpl;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileReader;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Properties;
 
 public class SignUpServlet extends HttpServlet {
 
@@ -25,15 +25,9 @@ public class SignUpServlet extends HttpServlet {
 
     @SneakyThrows
     @Override
-    public void init() {
-        Properties properties = new Properties();
-        properties.load(new FileReader("C:\\Users\\khusn\\Desktop\\University\\KHUSNUTDINOV_11_702\\BatmanDataBase\\src\\main\\resources\\ru.itis\\application.properties"));
-
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername(properties.getProperty("db.user"));
-        dataSource.setPassword(properties.getProperty("db.password"));
-        dataSource.setUrl(properties.getProperty("db.url"));
+    public void init(ServletConfig config) {
+        ServletContext context = config.getServletContext();
+        DataSource dataSource = (DataSource) context.getAttribute("dataSource");
 
         UsersRepository usersRepository = new UsersRepositoryJdbcImpl(dataSource);
         AuthRepository authRepository = new AuthRepositoryJdbcTemplateImpl(dataSource);

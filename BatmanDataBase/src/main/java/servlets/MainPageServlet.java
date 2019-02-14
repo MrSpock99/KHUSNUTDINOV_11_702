@@ -2,21 +2,21 @@ package servlets;
 
 import lombok.SneakyThrows;
 import models.*;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import repositories.*;
 import services.EditService;
 import services.EditServiceImpl;
 import services.InformationService;
 import services.InformationServiceImpl;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileReader;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 public class MainPageServlet extends HttpServlet {
     private InformationService informationService;
@@ -24,15 +24,9 @@ public class MainPageServlet extends HttpServlet {
 
     @SneakyThrows
     @Override
-    public void init() {
-        Properties properties = new Properties();
-        properties.load(new FileReader("C:\\Users\\khusn\\Desktop\\University\\KHUSNUTDINOV_11_702\\BatmanDataBase\\src\\main\\resources\\ru.itis\\application.properties"));
-
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername(properties.getProperty("db.user"));
-        dataSource.setPassword(properties.getProperty("db.password"));
-        dataSource.setUrl(properties.getProperty("db.url"));
+    public void init(ServletConfig config) {
+        ServletContext context = config.getServletContext();
+        DataSource dataSource = (DataSource) context.getAttribute("dataSource");
 
         informationService = new InformationServiceImpl(new SubjectsRepositoryJdbcImpl(dataSource),
                 new WeaponRepositoryJdbcImpl(dataSource), new AmmoRepositoryJdbcImpl(dataSource),
