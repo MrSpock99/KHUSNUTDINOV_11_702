@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:annotation-config/>
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/static/**" location="WEB-INF/static/"></mvc:resources>
+    <context:component-scan base-package="ru.itis"/>
+
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/views/ftl/"/>
+    </bean>
+
+    <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="url" value="jdbc:postgresql://localhost:5432/batman_db"/>
+        <property name="driverClass" value="org.postgresql.Driver"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="Metallica1981"/>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="usersRepository" class="ru.itis.repositories.UsersRepositoryJdbcImpl"/>
+
+    <bean id="authRepository" class="ru.itis.repositories.AuthRepositoryJdbcTemplateImpl"/>
+
+    <bean id="ammoRepository" class="ru.itis.repositories.AmmoRepositoryJdbcImpl"/>
+
+    <bean id="equipmentRepository" class="ru.itis.repositories.EquipmentRepositoryJdbcImpl"/>
+
+    <bean id="expensesRepository" class="ru.itis.repositories.ExpensesRepositoryJdbcImpl"/>
+
+    <bean id="subjectRepository" class="ru.itis.repositories.SubjectsRepositoryJdbcImpl"/>
+
+    <bean id="transportRepository" class="ru.itis.repositories.TransportRepositoryImpl"/>
+
+    <bean id="weaponRepository" class="ru.itis.repositories.WeaponRepositoryJdbcImpl"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="loginService" class="ru.itis.services.LoginServiceImpl">
+        <constructor-arg name="usersRepository" ref="usersRepository"/>
+        <constructor-arg name="authRepository" ref="authRepository"/>
+    </bean>
+
+    <bean id="editService" class="ru.itis.services.EditServiceImpl">
+        <constructor-arg name="ammoRepository" ref="ammoRepository"/>
+        <constructor-arg name="equipmentRepository" ref="equipmentRepository"/>
+        <constructor-arg name="expensesRepository" ref="expensesRepository"/>
+        <constructor-arg name="subjectRepository" ref="subjectRepository"/>
+        <constructor-arg name="transportRepository" ref="transportRepository"/>
+        <constructor-arg name="weaponRepository" ref="weaponRepository"/>
+    </bean>
+
+    <bean id="informationService" class="ru.itis.services.InformationServiceImpl">
+        <constructor-arg name="ammoRepository" ref="ammoRepository"/>
+        <constructor-arg name="equipmentRepository" ref="equipmentRepository"/>
+        <constructor-arg name="expensesRepository" ref="expensesRepository"/>
+        <constructor-arg name="subjectRepository" ref="subjectRepository"/>
+        <constructor-arg name="transportRepository" ref="transportRepository"/>
+        <constructor-arg name="weaponRepository" ref="weaponRepository"/>
+    </bean>
+
+    <!--  <bean id="/signUp" class="ru.itis.controllers.SignUpController"/>
+      <bean id="/mainPage" class="ru.itis.controllers.MainPageController"/>
+  -->
+</beans>
