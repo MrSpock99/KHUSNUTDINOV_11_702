@@ -9,6 +9,7 @@ import ru.itis.forms.UserForm;
 import ru.itis.services.LoginService;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Controller
@@ -50,18 +51,22 @@ public class SignUpController {
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String signUpUser(UserForm userForm) {
+    public String signUpUser(UserForm userForm, HttpServletResponse response) {
         Optional<String> optionalCookieValue = loginService.signIn(userForm);
         if (optionalCookieValue.isPresent()) {
             Cookie cookie = new Cookie("AuthFilter", optionalCookieValue.get());
+            response.addCookie(cookie);
+            response.setStatus(201);
+            return "redirect:/mainPage";
         } else {
             if (userForm.getName() != null) {
                 loginService.signUp(userForm);
+                response.setStatus(201);
                 return "redirect:/mainPage";
             } else {
+                response.setStatus(403);
                 return "redirect:/signUp";
             }
         }
-        return "redirect:/signUp";
     }
 }

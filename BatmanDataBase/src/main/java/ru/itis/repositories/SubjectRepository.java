@@ -11,4 +11,6 @@ public interface SubjectRepository extends CrudRepository<Subject, Long> {
     Optional<List<Subject>> getHeroes();
 
     Optional<List<Subject>> getVillains();
+
+    List<Subject> findAllByAlias(String alias);
 }

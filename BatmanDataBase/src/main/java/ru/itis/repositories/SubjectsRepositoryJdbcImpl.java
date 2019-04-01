@@ -36,6 +36,10 @@ public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
     //language=sql
     private static final String SQL_UPDATE_ALL_BY_ID =
             "update subject set alias = ?, real_name = ?,weakness_id = ?, defence_id = ?, type = ?   where id = ?";
+
+    //language=SQL
+    private static final String SQL_SEARCH = "select * from subject where subject.alias ilike ?";
+
     @Autowired
     private WeaponRepositoryJdbcImpl weaponRepository;
     @Autowired
@@ -67,6 +71,11 @@ public class SubjectsRepositoryJdbcImpl implements SubjectRepository {
     @Override
     public Optional<List<Subject>> getVillains() {
         return Optional.of(jdbcTemplate.query(SQL_SELECT_ALL_VILLAINS, subjectRowMapper));
+    }
+
+    @Override
+    public List<Subject> findAllByAlias(String alias) {
+        return jdbcTemplate.query(SQL_SEARCH, subjectRowMapper, "%" + alias + "%");
     }
 
     @Override

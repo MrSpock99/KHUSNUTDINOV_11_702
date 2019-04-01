@@ -1,36 +1,23 @@
 package ru.itis.filter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.itis.models.User;
-import ru.itis.repositories.AuthRepository;
-import ru.itis.repositories.AuthRepositoryJdbcTemplateImpl;
-import ru.itis.repositories.UsersRepository;
-import ru.itis.repositories.UsersRepositoryJdbcImpl;
 import ru.itis.services.LoginService;
-import ru.itis.services.LoginServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.io.IOException;
-
-//как сделать фильтр на несколько страниц?
 /*
-@WebFilter("/mainPage")
-*/
+@WebFilter("/mainPage")*/
 public class AuthFilter implements Filter {
 
-    private LoginService service;
+    @Autowired
+    private LoginService loginService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        ServletContext context = filterConfig.getServletContext();
-        DataSource dataSource = (DataSource) context.getAttribute("dataSource");
-
-        UsersRepository usersRepository = new UsersRepositoryJdbcImpl();
-        AuthRepository authRepository = new AuthRepositoryJdbcTemplateImpl();
-        this.service = new LoginServiceImpl(usersRepository, authRepository);
     }
 
     @Override
@@ -38,7 +25,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        Cookie cookies[] = request.getCookies();
+        Cookie[] cookies = request.getCookies();
 
         boolean exists = false;
 
@@ -48,8 +35,8 @@ public class AuthFilter implements Filter {
 
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("AuthFilter")) {
-                if (!service.isExistByCookie(cookie.getValue())) {
-                    User user = service.getUserByCookie(cookie.getValue());
+                if (!loginService.isExistByCookie(cookie.getValue())) {
+                    User user = loginService.getUserByCookie(cookie.getValue());
                     System.out.println(user.toString());
                     response.sendRedirect("/signUp");
                     return;
@@ -63,7 +50,6 @@ public class AuthFilter implements Filter {
         } else {
             chain.doFilter(request, response);
         }
-
     }
 
     @Override

@@ -25,7 +25,7 @@
 
 </head>
 
-<body onload="getUserName()" id="page-top">
+<body id="page-top">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
     <a class="navbar-brand js-scroll-trigger" href="#page-top">
@@ -67,13 +67,12 @@
     <section class="resume-section p-3 p-lg-5 d-flex d-column" id="welcome">
         <div class="my-auto">
             <h1 class="mb-0">Welcome,
-                <span id="user_name" class="text-primary"></span>
+                <span id="user_name" class="text-primary">${userName}</span>
             </h1>
         </div>
     </section>
 
 </div>
-
 
 <hr class="m-0">
 
@@ -85,7 +84,7 @@
 
         <input class="form-control" id="subjects_input" type="text" placeholder="Search..">
         <br>
-        <table class="table table-hover">
+        <table id="subjects_table_head" class="table table-hover">
             <thead>
             <tr>
                 <th>#</th>
@@ -111,7 +110,7 @@
                     <td>${(item.weakness.name)!""}</td>
                     <td>${(item.defence.name)!""}</td>
                     <td>${item.type}</td>
-                </tr>
+                </tr>/
             </#list>
             </tbody>
         </table>
@@ -120,9 +119,7 @@
             $(document).ready(function () {
                 $("#subjects_input").on("keyup", function () {
                     var value = $(this).val().toLowerCase();
-                    $("#subjects_table tr").filter(function () {
-                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                    });
+                    search(value);
                 });
             });
         </script>
@@ -234,7 +231,6 @@
         </button>
     </div>
 </section>
-
 
 <hr class="m-0">
 
@@ -532,6 +528,7 @@
                         $("#btn_delete_subject").on("click", function (e1) {
                             deleteEntity("subject", $(e.relatedTarget).data('id'));
                         });
+
                     }).modal('show');
                 </script>
 
@@ -859,51 +856,60 @@
 <!-- Custom scripts for this template -->
 <script src="static/js/resume.min.js"></script>
 
-<script>
-    function getUserName() {
+<script type="text/javascript">
+    function search(query) {
         $.ajax({
-            url: "/mainPage.json",
-            type: "GET",
-            data_type: "json"
-        })
-            .done(function (data) {
-                console.log(data);
-                $("#user_name").text(data); // setting text
-            }).fail(function (jqXHR, exception) {
-            var msg = '';
-            if (jqXHR.status === 0) {
-                msg = 'Not connect.\n Verify Network.';
-            } else if (jqXHR.status == 404) {
-                msg = 'Requested page not found. [404]';
-            } else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
-            } else if (exception === 'parsererror') {
-                msg = 'Requested JSON parse failed.';
-            } else if (exception === 'timeout') {
-                msg = 'Time out error.';
-            } else if (exception === 'abort') {
-                msg = 'Ajax request aborted.';
-            } else {
-                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            type: 'GET',
+            url: '/mainPage/search',
+            data: {
+                q: query
             }
-            alert(msg);
+        }).done(function (data) {
+            if (data) {
+                var tableHtml = "";
+                tableHtml += '<table class="table table-hover">\n' +
+                    '            <thead>\n' +
+                    '            <tr>\n' +
+                    '                <th>#</th>\n' +
+                    '                <th>Alias</th>\n' +
+                    '                <th>Real name</th>\n' +
+                    '                <th>Weakness</th>\n' +
+                    '                <th>Defence</th>\n' +
+                    '                <th>Type</th>\n' +
+                    '            </tr>\n' +
+                    '            </thead>';
+                for (var i = 0; i < data.length; i++) {
+                    tableHtml += '<tbody id="subjects_table">';
+                    tableHtml += '<tr>' +
+                        '<td>' + data[i].id + '</td>' +
+                        '<td>' + data[i].alias + '</td>' +
+                        '<td>' + data[i].realName + '</td>' +
+                        '<td>' + data[i].weakness.name + '</td>' +
+                        '<td>' + data[i].defence.name + '</td>' +
+                        '<td>' + data[i].type + '</td>' +
+                        '</tr>';
+                    tableHtml += '</tbody>';
+                }
+                tableHtml += '</table>';
+                $('#subjects_table_head').html(tableHtml);
+            }
         });
     }
 
     function deleteEntity(table_name, entity_id) {
+        let entity = {
+            "entity_id": entity_id,
+            "table_name": table_name,
+            "action": "delete"
+        };
         $.ajax({
-            url: "/mainPage",
+            url: "/mainPage/json",
             type: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                entity_id: entity_id,
-                table_name: table_name,
-                action: "delete"
-            }
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            data: JSON.stringify(entity)
         }).done(function (data) {
-            $("#user_name").text(data); // setting text
+            alert(data);
         }).fail(function (jqXHR, exception) {
             var msg = '';
             if (jqXHR.status === 0) {

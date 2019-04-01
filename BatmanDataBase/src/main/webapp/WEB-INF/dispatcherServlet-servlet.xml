@@ -61,6 +61,10 @@
         <constructor-arg name="authRepository" ref="authRepository"/>
     </bean>
 
+    <bean id="searchService" class="ru.itis.services.SearchServiceImpl">
+        <constructor-arg name="subjectRepository" ref="subjectRepository"/>
+    </bean>
+
     <bean id="editService" class="ru.itis.services.EditServiceImpl">
         <constructor-arg name="ammoRepository" ref="ammoRepository"/>
         <constructor-arg name="equipmentRepository" ref="equipmentRepository"/>
