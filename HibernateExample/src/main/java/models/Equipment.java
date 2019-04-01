@@ -1,5 +1,8 @@
 package models;
 
+import javax.persistence.Entity;
+
+@Entity(name = "equipment")
 public class Equipment extends BatmanThings {
     //Пуленепробиваемость
     private Boolean bullet;

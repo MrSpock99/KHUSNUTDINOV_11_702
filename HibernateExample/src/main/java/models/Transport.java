@@ -1,5 +1,8 @@
 package models;
 
+import javax.persistence.Entity;
+
+@Entity(name = "transport")
 public class Transport extends BatmanThings {
     //Может плавать
     private boolean water;

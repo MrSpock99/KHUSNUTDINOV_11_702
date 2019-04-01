@@ -1,7 +1,6 @@
 package app;
 
-import models.Auth;
-import models.User;
+import models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -18,6 +17,11 @@ public class Main {
 
         configuration.addAnnotatedClass(User.class);
         configuration.addAnnotatedClass(Auth.class);
+        configuration.addAnnotatedClass(Ammo.class);
+        configuration.addAnnotatedClass(Weapon.class);
+        configuration.addAnnotatedClass(Transport.class);
+        configuration.addAnnotatedClass(Equipment.class);
+        configuration.addAnnotatedClass(Subject.class);
         configuration.setProperty("hibernate.show_sql", "true");
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
