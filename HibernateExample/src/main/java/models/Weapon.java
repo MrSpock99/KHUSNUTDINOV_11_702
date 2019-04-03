@@ -1,12 +1,12 @@
 package models;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity(name = "weapon")
 public class Weapon extends BatmanThings {
-    @ManyToOne
-    @JoinColumn(name = "ammo_id")
+    /* @ManyToOne
+     @JoinColumn(name = "ammo_id")*/
+    @Transient
     private Ammo ammo;
 }

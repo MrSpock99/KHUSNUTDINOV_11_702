@@ -22,6 +22,8 @@ public class Main {
         configuration.addAnnotatedClass(Transport.class);
         configuration.addAnnotatedClass(Equipment.class);
         configuration.addAnnotatedClass(Subject.class);
+        configuration.addAnnotatedClass(Expenses.class);
+        configuration.addAnnotatedClass(WeaponAmmo.class);
         configuration.setProperty("hibernate.show_sql", "true");
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
