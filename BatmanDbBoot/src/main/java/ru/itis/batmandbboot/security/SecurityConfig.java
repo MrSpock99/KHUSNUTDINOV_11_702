@@ -45,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/mainPage")
                 .permitAll()
                 .and()
+                .rememberMe().key("remember_me_key").userDetailsService(userDetailsService)
+                .and()
                 .logout().logoutSuccessUrl("/signIn")
                 .permitAll();
     }
