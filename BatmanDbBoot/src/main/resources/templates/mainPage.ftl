@@ -25,7 +25,7 @@
     <link href="http://localhost:8080/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="http://localhost:8080/css/custom_1111bootstrap.css" type="text/css" rel="stylesheet">
+    <link href="http://localhost:8080/css/custom_bootstrap.css" type="text/css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 </head>
