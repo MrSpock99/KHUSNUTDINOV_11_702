@@ -1,15 +1,13 @@
 package ru.itis.batmandbboot.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
 @Getter
 @Entity
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "db_user")
@@ -23,4 +21,12 @@ public class User {
     private String email;
     @Column(name = "hash_password", length = 200)
     private String hashPassword;
+    @Enumerated(value = EnumType.STRING)
+    private UserState state;
+
+    private String confirmString;
+
+    public boolean isEnabled() {
+        return this.getState().equals(UserState.CONFIRMED);
+    }
 }

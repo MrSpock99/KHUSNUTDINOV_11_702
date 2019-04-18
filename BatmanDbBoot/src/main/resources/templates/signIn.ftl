@@ -8,6 +8,9 @@
 <body>
 
 <div class="login-page">
+    <#if error??>
+        <h1>Неправильный логин или пароль</h1>
+    </#if>
     <div class="form">
         <form action="/signIn" class="login-form" method="post">
             <input type="text" placeholder="email" name="email"/>
@@ -21,6 +24,5 @@
         </form>
     </div>
 </div>
-
 </body>
 </html>

@@ -22,6 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (userOptional.isPresent()) {
             return new UserDetailsImpl(userOptional.get());
-        } else throw new SecurityException();
+        } else throw new SecurityException("User with email <\" + email + \"> not found");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.itis.batmandbboot.forms.UserForm;
 import ru.itis.batmandbboot.models.Auth;
 import ru.itis.batmandbboot.models.User;
+import ru.itis.batmandbboot.models.UserState;
 import ru.itis.batmandbboot.repositories.AuthRepository;
 import ru.itis.batmandbboot.repositories.UsersRepository;
 
@@ -23,6 +24,9 @@ public class LoginServiceImpl implements LoginService {
 
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     public LoginServiceImpl(UsersRepository usersRepository, AuthRepository authRepository) {
         this.usersRepository = usersRepository;
         this.authRepository = authRepository;
@@ -31,12 +35,19 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void signUp(UserForm userForm) {
+        String confirmString = UUID.randomUUID().toString();
+
         User newUser = User.builder()
                 .name(userForm.getName())
                 .email(userForm.getEmail())
                 .hashPassword(passwordEncoder.encode(userForm.getPassword()))
+                .state(UserState.NOT_CONFIRMED)
+                .confirmString(confirmString)
                 .build();
         usersRepository.save(newUser);
+        String text = "<a href='http://localhost:8080/confirm/" + newUser.getConfirmString() + "'>" +"Пройдите по ссылке" + "</a>";
+        emailService.sendMail("Подтвреждение регистрации", text, newUser.getEmail());
+
     }
 
     @Override

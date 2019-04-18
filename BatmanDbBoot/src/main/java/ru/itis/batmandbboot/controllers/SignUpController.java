@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.itis.batmandbboot.forms.UserForm;
+import ru.itis.batmandbboot.services.EmailService;
 import ru.itis.batmandbboot.services.LoginService;
 
 @Controller
@@ -12,6 +13,8 @@ public class SignUpController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/signUp")
     public String getSignUpPage() {
