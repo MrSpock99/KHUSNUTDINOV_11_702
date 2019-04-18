@@ -105,7 +105,7 @@
                 <tr data-id="${item.id}" data-alias="${item.alias}"
                     data-real_name="${item.realName}" data-weakness="${(item.weakness.name)!""}"
                     data-defence="${(item.defence.name)!""}"
-                    data-type="${item.type}" data-image="${(item.imageBase64)!"resources/images/placeholder.png"}"
+                    data-type="${item.type}" data-image="${(item.imageBase64)!"img/placeholder.png"}"
                     data-toggle="modal"
                     data-target="#subjectInfoModal"
                     class="clickable-row" style="cursor: pointer">
@@ -262,7 +262,7 @@
                 <tr data-toggle="modal" data-id="${item.id}" data-name="${item.name}"
                     data-air="${item.air?then('Yes', 'No')}"
                     data-water="${item.water?then('Yes', 'No')}" data-ground="${item.ground?then('Yes', 'No')}"
-                    data-amount="${item.amount}" data-target="#transportInfoModal" class='clickable-row'
+                    data-amount="${(item.amount)!"0"}" data-target="#transportInfoModal" class='clickable-row'
                     data-image="${(item.imageBase64)!"img/placeholder.png"}"
                     style="cursor: pointer">
                     <td>${item.id}</td>
