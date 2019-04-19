@@ -36,7 +36,7 @@
     <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Welcome</span>
         <span class="d-none d-lg-block">
-          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="static/img/bat_logo.png" alt="">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="http://localhost:8080/img/bat_logo.png" alt="">
         </span>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -852,13 +852,13 @@
 
 </section>
 <!-- Bootstrap core JavaScript -->
-<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="http://localhost:8080/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Plugin JavaScript -->
-<script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="http://localhost:8080/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for this template -->
-<script src="static/js/resume.min.js"></script>
+<script src="http://localhost:8080/js/resume.min.js"></script>
 
 <script type="text/javascript">
     function search(query) {
