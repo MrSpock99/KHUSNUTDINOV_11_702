@@ -858,7 +858,7 @@
 <script src="http://localhost:8080/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for this template -->
-<script src="http://localhost:8080/js/resume.min.js"></script>
+<script src="http://localhost:8080/js/resume.js"></script>
 
 <script type="text/javascript">
     function search(query) {
