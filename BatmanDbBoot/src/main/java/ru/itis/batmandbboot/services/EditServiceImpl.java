@@ -8,6 +8,7 @@ import ru.itis.batmandbboot.repositories.*;
 public class EditServiceImpl implements EditService {
     private SubjectRepository subjectRepository;
     private WeaponRepository weaponRepository;
+    private WeaponAmmoRepository weaponAmmoRepository;
     private AmmoRepository ammoRepository;
     private EquipmentRepository equipmentRepository;
     private TransportRepository transportRepository;
@@ -15,9 +16,10 @@ public class EditServiceImpl implements EditService {
 
     public EditServiceImpl(SubjectRepository subjectRepository, WeaponRepository weaponRepository, AmmoRepository ammoRepository,
                            EquipmentRepository equipmentRepository, TransportRepository transportRepository,
-                           ExpensesRepository expensesRepository) {
+                           ExpensesRepository expensesRepository, WeaponAmmoRepository weaponAmmoRepository) {
         this.subjectRepository = subjectRepository;
         this.weaponRepository = weaponRepository;
+        this.weaponAmmoRepository = weaponAmmoRepository;
         this.ammoRepository = ammoRepository;
         this.equipmentRepository = equipmentRepository;
         this.transportRepository = transportRepository;
@@ -51,7 +53,7 @@ public class EditServiceImpl implements EditService {
             subject.setRealName(subjectArr[1]);
         }
         if (!subjectArr[2].equals("")) {
-            subject.setWeakness(weaponRepository.getOne(Long.valueOf(subjectArr[2])));
+            subject.setWeakness(weaponAmmoRepository.getOne(Long.valueOf(subjectArr[2])));
         }
         if (!subjectArr[3].equals("")) {
             subject.setDefence(equipmentRepository.getOne(Long.valueOf(subjectArr[3])));

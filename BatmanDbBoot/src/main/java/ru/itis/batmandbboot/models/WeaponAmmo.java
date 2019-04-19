@@ -1,7 +1,10 @@
 package ru.itis.batmandbboot.models;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity(name = "weapon_ammo")
 public class WeaponAmmo {
     @Id

@@ -34,4 +34,6 @@ public interface InformationService {
     void addSubject(Subject subject);
 
     void deleteSubject(Subject subject);
+
+    List<WeaponAmmo> getAllWeaponAmmo();
 }

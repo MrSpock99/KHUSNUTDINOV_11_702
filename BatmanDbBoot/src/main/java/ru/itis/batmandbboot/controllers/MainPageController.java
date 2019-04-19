@@ -39,7 +39,7 @@ public class MainPageController {
         modelAndView.addObject("userName",principal.getName());
 
         modelAndView.addObject("subjectList", informationService.getAllSubjects());
-        modelAndView.addObject("weaponList", informationService.getAllWeapon());
+        modelAndView.addObject("weaponList", informationService.getAllWeaponAmmo());
         modelAndView.addObject("ammoList", informationService.getAllAmmo());
         modelAndView.addObject("equipmentList", informationService.getAllEquipment());
         modelAndView.addObject("transportList", informationService.getAllTransport());

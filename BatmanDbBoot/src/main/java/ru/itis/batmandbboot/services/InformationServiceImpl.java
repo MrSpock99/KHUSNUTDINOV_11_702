@@ -12,6 +12,7 @@ import java.util.Optional;
 public class InformationServiceImpl implements InformationService {
     private SubjectRepository subjectRepository;
     private WeaponRepository weaponRepository;
+    private WeaponAmmoRepository weaponAmmoRepository;
     private AmmoRepository ammoRepository;
     private EquipmentRepository equipmentRepository;
     private TransportRepository transportRepository;
@@ -19,9 +20,10 @@ public class InformationServiceImpl implements InformationService {
 
     public InformationServiceImpl(SubjectRepository subjectRepository, WeaponRepository weaponRepository,
                                   AmmoRepository ammoRepository, EquipmentRepository equipmentRepository,
-                                  TransportRepository transportRepository, ExpensesRepository expensesRepository) {
+                                  TransportRepository transportRepository, ExpensesRepository expensesRepository, WeaponAmmoRepository weaponAmmoRepository) {
         this.subjectRepository = subjectRepository;
         this.weaponRepository = weaponRepository;
+        this.weaponAmmoRepository = weaponAmmoRepository;
         this.ammoRepository = ammoRepository;
         this.equipmentRepository = equipmentRepository;
         this.transportRepository = transportRepository;
@@ -123,5 +125,10 @@ public class InformationServiceImpl implements InformationService {
     @Override
     public void deleteSubject(Subject subject) {
         subjectRepository.delete(subject);
+    }
+
+    @Override
+    public List<WeaponAmmo> getAllWeaponAmmo() {
+        return weaponAmmoRepository.findAll();
     }
 }

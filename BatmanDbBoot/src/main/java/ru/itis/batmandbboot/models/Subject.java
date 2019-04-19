@@ -19,7 +19,7 @@ public class Subject {
     //Какое оружие против него использовать
     @ManyToOne
     @JoinColumn(name = "weakness_id")
-    private Weapon weakness;
+    private WeaponAmmo weakness;
     //Какую костюм надеть при битве с ним
     @ManyToOne
     @JoinColumn(name = "defence_id")

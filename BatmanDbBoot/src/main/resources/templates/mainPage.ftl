@@ -156,7 +156,7 @@
             <#list weaponList as item>
                 <tr data-id="${item.id}" data-ammo="${(item.ammo.name)!""}"
                     data-image="${(item.imageBase64)!"img/placeholder.png"}"
-                    data-name="${item.name}" data-amount="${item.amount}" data-toggle="modal"
+                    data-name="${item.name}" data-amount="${item.weapon.amount}" data-toggle="modal"
                     data-target="#weaponAmmoInfoModal"
                     class='clickable-row' style="cursor: pointer">
                     <td>${item.id}</td>
