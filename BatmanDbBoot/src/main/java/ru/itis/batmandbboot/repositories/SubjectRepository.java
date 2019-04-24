@@ -16,5 +16,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query(value = "SELECT * FROM subject WHERE TYPE = 1?", nativeQuery = true)
     Optional<List<Subject>> getAllVillains(String type);
 
-    List<Subject> findAllByAlias(String alias);
+    List<Subject> getAllByAliasContainingIgnoreCase(String alias);
 }

@@ -18,6 +18,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Subject> searchSubject(String alias) {
-        return subjectRepository.findAllByAlias(alias);
+        List<Subject> list = subjectRepository.getAllByAliasContainingIgnoreCase(alias);
+        return subjectRepository.getAllByAliasContainingIgnoreCase(alias);
     }
 }
