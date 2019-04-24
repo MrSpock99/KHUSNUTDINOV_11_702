@@ -3,10 +3,9 @@ package ru.itis.batmandbboot.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.itis.batmandbboot.forms.EntityForm;
 import ru.itis.batmandbboot.models.Subject;
 import ru.itis.batmandbboot.services.EditService;
 import ru.itis.batmandbboot.services.InformationService;
@@ -49,6 +48,17 @@ public class MainPageController {
         modelAndView.addObject("expensesList", informationService.getAllExpenses());
 
         return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/mainPage/json", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String deleteEntity(@RequestBody EntityForm entityForm) {
+        System.out.println(entityForm.toString());
+        if (editService.deleteEntity(entityForm.getTable_name(), Long.valueOf(entityForm.getEntity_id()))) {
+            return "Deleted successfully";
+        }
+        return "Error";
     }
 
     @GetMapping(value = "/mainPage/search", produces = MediaType.APPLICATION_JSON_VALUE)

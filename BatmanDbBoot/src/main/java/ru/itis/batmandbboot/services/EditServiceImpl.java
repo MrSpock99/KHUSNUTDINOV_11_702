@@ -30,7 +30,8 @@ public class EditServiceImpl implements EditService {
     public boolean deleteEntity(String table, Long id) {
         switch (table) {
             case "subject":
-                subjectRepository.delete(subjectRepository.getOne(id));
+                subjectRepository.deleteById((id));
+                return true;
             case "equipment":
                 equipmentRepository.delete(equipmentRepository.getOne(id));
             case "weapon":

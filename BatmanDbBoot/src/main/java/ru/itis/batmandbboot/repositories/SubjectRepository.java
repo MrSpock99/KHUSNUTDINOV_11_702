@@ -17,4 +17,6 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<List<Subject>> getAllVillains(String type);
 
     List<Subject> getAllByAliasContainingIgnoreCase(String alias);
+
+    void deleteById(Long id);
 }
