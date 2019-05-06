@@ -60,7 +60,7 @@ public class EditServiceImpl implements EditService {
             subject.setDefence(equipmentRepository.getOne(Long.valueOf(subjectArr[3])));
         }
         if (subjectArr[4] != null) {
-            subject.setType(SubjectType.valueOf(subjectArr[4]));
+            subject.setType(SubjectType.valueOf(subjectArr[4].toUpperCase()));
         }
         subjectRepository.save(subject);
         return true;

@@ -36,7 +36,8 @@
     <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <span class="d-block d-lg-none">Welcome</span>
         <span class="d-none d-lg-block">
-          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="http://localhost:8080/img/bat_logo.png" alt="">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="http://localhost:8080/img/bat_logo.png"
+               alt="">
         </span>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -913,7 +914,7 @@
             "action": "delete"
         };
         $.ajax({
-            url: "/mainPage/json",
+            url: "/mainPage/delete",
             type: "POST",
             contentType: "application/json; charset=utf-8",
             datatype: "json",
@@ -942,14 +943,18 @@
     }
 
     function addEntity(table_name, entity) {
+        alert(entity);
+        let entityJson = {
+            "entity": entity,
+            "table_name": table_name,
+            "action": "add"
+        };
         $.ajax({
-            url: "/mainPage",
+            url: "/mainPage/add",
             type: "POST",
-            data: {
-                entity: entity,
-                table_name: table_name,
-                action: "add"
-            }
+            contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            data: JSON.stringify(entityJson)
         }).done(function (data) {
 
         }).fail(function (jqXHR, exception) {

@@ -51,7 +51,7 @@ public class MainPageController {
     }
 
 
-    @RequestMapping(value = "/mainPage/json", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/mainPage/delete", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteEntity(@RequestBody EntityForm entityForm) {
         System.out.println(entityForm.toString());
@@ -59,6 +59,29 @@ public class MainPageController {
             return "Deleted successfully";
         }
         return "Error";
+    }
+
+    @RequestMapping(value = "/mainPage/add", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String addEntity(@RequestBody EntityForm entityForm) {
+        switch (entityForm.getTable_name()) {
+            case "subject":
+                editService.saveSubject(entityForm.getEntity());
+                break;
+            case "weapon":
+                editService.saveWeapon(entityForm.getEntity());
+                break;
+            case "equipment":
+                editService.saveEquipment(entityForm.getEntity());
+                break;
+            case "transport":
+                editService.saveTransport(entityForm.getEntity());
+                break;
+            case "expense":
+                editService.saveExpense(entityForm.getEntity());
+                break;
+        }
+        return "Added successfully";
     }
 
     @GetMapping(value = "/mainPage/search", produces = MediaType.APPLICATION_JSON_VALUE)
