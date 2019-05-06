@@ -63,6 +63,12 @@
             <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="#expenses">Expenses</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger"></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
+            </li>
         </ul>
     </div>
 </nav>
