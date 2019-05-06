@@ -943,7 +943,6 @@
     }
 
     function addEntity(table_name, entity) {
-        alert(entity);
         let entityJson = {
             "entity": entity,
             "table_name": table_name,
@@ -956,7 +955,7 @@
             datatype: "json",
             data: JSON.stringify(entityJson)
         }).done(function (data) {
-
+            alert(data);
         }).fail(function (jqXHR, exception) {
             var msg = '';
             if (jqXHR.status === 0) {
