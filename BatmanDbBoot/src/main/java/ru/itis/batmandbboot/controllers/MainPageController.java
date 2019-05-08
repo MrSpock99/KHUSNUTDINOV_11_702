@@ -5,7 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.itis.batmandbboot.forms.EntityForm;
+import ru.itis.batmandbboot.forms.AddEntityForm;
+import ru.itis.batmandbboot.forms.DeleteEntityForm;
 import ru.itis.batmandbboot.models.Subject;
 import ru.itis.batmandbboot.services.EditService;
 import ru.itis.batmandbboot.services.InformationService;
@@ -26,8 +27,6 @@ public class MainPageController {
     @Autowired
     private LoginService loginService;
 
-    private ModelAndView modelAndView;
-
 
     @GetMapping("/mainPage")
     public ModelAndView getMainPage(Principal principal) {
@@ -35,7 +34,7 @@ public class MainPageController {
     }
 
     private ModelAndView initModelAndView(Principal principal) {
-        modelAndView = new ModelAndView();
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mainPage");
 
         modelAndView.addObject("userName",principal.getName());
@@ -53,7 +52,7 @@ public class MainPageController {
 
     @RequestMapping(value = "/mainPage/delete", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String deleteEntity(@RequestBody EntityForm entityForm) {
+    public String deleteEntity(@RequestBody DeleteEntityForm entityForm) {
         System.out.println(entityForm.toString());
         if (editService.deleteEntity(entityForm.getTable_name(), Long.valueOf(entityForm.getEntity_id()))) {
             return "Deleted successfully";
@@ -63,7 +62,7 @@ public class MainPageController {
 
     @RequestMapping(value = "/mainPage/add", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String addEntity(@RequestBody EntityForm entityForm) {
+    public String addEntity(@RequestBody AddEntityForm entityForm) {
         switch (entityForm.getTable_name()) {
             case "subject":
                 editService.saveSubject(entityForm.getEntity());
