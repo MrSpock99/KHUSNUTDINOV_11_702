@@ -37,7 +37,7 @@ public class MainPageController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mainPage");
 
-        modelAndView.addObject("userName",principal.getName());
+        modelAndView.addObject("userName", principal.getName());
 
         modelAndView.addObject("subjectList", informationService.getAllSubjects());
         modelAndView.addObject("weaponList", informationService.getAllWeaponAmmo());
@@ -54,10 +54,8 @@ public class MainPageController {
     @ResponseBody
     public String deleteEntity(@RequestBody DeleteEntityForm entityForm) {
         System.out.println(entityForm.toString());
-        if (editService.deleteEntity(entityForm.getTable_name(), Long.valueOf(entityForm.getEntity_id()))) {
-            return "Deleted successfully";
-        }
-        return "Error";
+        editService.deleteEntity(entityForm.getTable_name(), Long.valueOf(entityForm.getEntity_id()));
+        return "Deleted successfully";
     }
 
     @RequestMapping(value = "/mainPage/add", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -89,5 +87,4 @@ public class MainPageController {
         List<Subject> list = searchService.searchSubject(q);
         return searchService.searchSubject(q);
     }
-
 }

@@ -213,15 +213,16 @@
             <#list equipmentList as item>
                 <tr data-toggle="modal" data-id="${item.id}" data-name="${item.name}"
                     data-bullet="${item.bullet?then('Yes', 'No')}"
-                    data-knife="${item.knife?then('Yes', 'No')}" data-explosion="${item.explosion?then('Yes', 'No')}"
-                    data-amount="${item.amount}" data-target="#equipmentInfoModal" class='clickable-row'
+                    data-knife="${item.knife?then('Yes', 'No')}"
+                    data-explosion="${(item.explosion?then('Yes', 'No'))!'No'}"
+                    data-amount="${(item.amount)!'0'}" data-target="#equipmentInfoModal" class='clickable-row'
                     data-image="${(item.imageBase64)!"img/placeholder.png"}"
                     style="cursor: pointer">
                     <td>${item.id}</td>
                     <td>${item.name}</td>
-                    <td>${item.bullet?then('Yes', 'No')}</td>
-                    <td>${item.knife?then('Yes', 'No')}</td>
-                    <td>${item.explosion?then('Yes', 'No')}</td>
+                    <td>${(item.bullet?then('Yes', 'No'))!'No'}</td>
+                    <td>${(item.knife?then('Yes', 'No'))!'No'}</td>
+                    <td>${(item.explosion?then('Yes', 'No'))!'No'}</td>
                 </tr>
             </#list>
             </tbody>
@@ -607,7 +608,7 @@
                         $(this).find("#budget").text($(e.relatedTarget).data('budget'));
 
                         var image = new Image();
-                        console.log("TRANS CLICK");
+                        console.log("SHOW EXPENSE");
                         image.src = $(e.relatedTarget).data('image');
                         $("#expense_image").attr("src", image.src);
 
