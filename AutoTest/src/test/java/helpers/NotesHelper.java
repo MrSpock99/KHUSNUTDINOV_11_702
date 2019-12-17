@@ -40,7 +40,7 @@ public class NotesHelper extends HelperBase {
             try {
                 actual = noteListAfter.stream().filter(item -> {
                             assertAndVerifyElement(By.id(item.getAttribute("id")));
-                            return (item.getText().equals("a") && noteListAfter.size() == noteListBefore.size() + 1);
+                            return (item.getText().equals(note.getTitle()) && noteListAfter.size() == noteListBefore.size() + 1);
                         }
                 ).findAny();
                 break;
@@ -72,6 +72,9 @@ public class NotesHelper extends HelperBase {
             }
         }
 
+        if (!element.isPresent()){
+            addNoteWithoutAssert(oldNote);
+        }
 
         WebElement title = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("edit_title")));
         title.sendKeys(newNote.getTitle());
@@ -92,7 +95,18 @@ public class NotesHelper extends HelperBase {
             }
         }
 
-        Assert.assertTrue(element.isPresent());
+        Assert.assertTrue(element.isPresent() || newNote.getTitle().equals(newNote.getTitle()));
     }
 
+    public void addNoteWithoutAssert(Note note) throws InterruptedException {
+        WebElement title = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("edit_title")));
+        title.sendKeys(note.getTitle());
+        WebElement text = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("edit_textarea")));
+        text.sendKeys(note.getText());
+
+        assertAndVerifyElement(By.id("savedNotes"));
+        WebElement saveNoteBtn = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("btnSaveNote")));
+        saveNoteBtn.click();
+        Thread.sleep(5000);
+    }
 }

@@ -1,10 +1,6 @@
-package model;
-
 public class Note {
     private String title;
     private String text;
-
-    public Note(){}
 
     public Note(String title, String text) {
         this.title = title;

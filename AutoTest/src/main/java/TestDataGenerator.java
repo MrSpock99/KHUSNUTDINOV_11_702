@@ -1,54 +1,30 @@
 import java.io.File;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Random;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 public class TestDataGenerator {
-    public static void main(String[] args) {
-        generateUser();
+    public static void main(String[] args) throws IOException {
+        //generateNotes();
+        generateSettingsData();
     }
-    public static void generateUser() {
-        try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-            // root elements
-            Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("UserData");
-            doc.appendChild(rootElement);
-
-            Element user = doc.createElement("User");
-            rootElement.appendChild(user);
-
-            user.setAttribute("email","metallica1981@gmail.com");
-            user.setAttribute("password","Metallica1981");
-
-            // write the content into xml file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("E:\\file.xml"));
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
-
-            transformer.transform(source, result);
-
-            System.out.println("File saved!");
-
-        } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
+    public static void generateNotes() throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        for (int i = 0; i < 2; i++) {
+            xmlMapper.writeValue(new File("E:/notes/note" + i + ".xml"),
+                    new Note(Utils.INSTANCE.generateRandomString(5),
+                            Utils.INSTANCE.generateRandomString(5)));
         }
     }
-}
 
+    public static void generateSettingsData() throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        SettingsData settingsData = new SettingsData();
+        settingsData.setUser(new User("metallica1981fan@gmail.com", "Metallica1981"));
+        settingsData.setBaseUrl("https://anotepad.com/");
+        xmlMapper.writeValue(new File("settings.xml"), settingsData);
+    }
+}

@@ -1,39 +1,59 @@
 package tests;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import model.Note;
-import model.User;
 import org.junit.jupiter.api.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class FirstTest extends TestBase {
+public class FirstTest extends AuthBase {
 
     @Test
-    @Order(1)
-    public void test() throws InterruptedException {
-        TestBase.applicationManager.getNavigationHelper().goToLoginPage();
+    @Order(3)
+    public void testAddNote() throws InterruptedException, IOException {
+       /* TestBase.applicationManager.getNavigationHelper().goToLoginPage();
         User user = new User("metallica1981fan@gmail.com", "Metallica1981");
-        TestBase.applicationManager.getLoginHelper().login(user);
-        TestBase.applicationManager.getLoginHelper().logout();
-    }
+        *//*XmlMapper xmlMapper = new XmlMapper();
+        File file = new File("E:/user.xml");
+        String xml = inputStreamToString(new FileInputStream(file));
+        User user = xmlMapper.readValue(xml, User.class);*//*
+         */
+        /*User user = new User("metallica1981fan@gmail.com", "Metallica1981");
 
-    @Test
-    @Order(2)
-    public void test2() throws InterruptedException {
-        TestBase.applicationManager.getNavigationHelper().goToLoginPage();
-        User user = new User("metallica1981fan@gmail.com", "Metallica1981");
         TestBase.applicationManager.getLoginHelper().login(user);
-        Note note = new Note("a", "b");
+        */
+        XmlMapper xmlMapper = new XmlMapper();
+        File file = new File("E:/notes/note0" + ".xml");
+        String xml = inputStreamToString(new FileInputStream(file));
+        Note note = xmlMapper.readValue(xml, Note.class);
+
         TestBase.applicationManager.getNotesHelper().addNote(note);
     }
 
     @Test
-    @Order(3)
-    public void testEditNote() throws InterruptedException {
-        TestBase.applicationManager.getNavigationHelper().goToLoginPage();
-        User user = new User("metallica1981fan@gmail.com", "Metallica1981");
+    @Order(4)
+    public void testEditNote() throws InterruptedException, IOException {
+        //TestBase.applicationManager.getNavigationHelper().goToLoginPage();
+        /*XmlMapper xmlMapper = new XmlMapper();
+        File file = new File("E:/user.xml");
+        String xml = inputStreamToString(new FileInputStream(file));
+        User user = xmlMapper.readValue(xml, User.class);
+*/
+       /* User user = new User("metallica1981fan@gmail.com", "Metallica1981");
         TestBase.applicationManager.getLoginHelper().login(user);
-        Note oldNote = new Note("a", "b");
-        Note newNote = new Note("hahaha", "b");
+       */
+        XmlMapper xmlMapper = new XmlMapper();
+        File file = new File("E:/notes/note0" + ".xml");
+        String xml = inputStreamToString(new FileInputStream(file));
+        Note oldNote = xmlMapper.readValue(xml, Note.class);
+
+        file = new File("E:/notes/note1" + ".xml");
+        xml = inputStreamToString(new FileInputStream(file));
+        Note newNote = xmlMapper.readValue(xml, Note.class);
+
         TestBase.applicationManager.getNotesHelper().editNote(oldNote, newNote);
     }
 }

@@ -14,6 +14,6 @@ public class NavigationHelper extends HelperBase {
     }
 
     public void goToLoginPage() {
-        driver.get(baseUrl + "/create_account");
+        driver.get(baseUrl + "create_account");
     }
 }

@@ -5,6 +5,9 @@ import helpers.NavigationHelper;
 import helpers.NotesHelper;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import settings.Settings;
+
+import java.io.IOException;
 
 public class ApplicationManager {
     private ChromeDriver driver;
@@ -15,10 +18,10 @@ public class ApplicationManager {
     private NavigationHelper navigationHelper;
     private static ThreadLocal<ApplicationManager> app;
 
-    private ApplicationManager() {
+    private ApplicationManager() throws IOException {
         System.setProperty("webdriver.chrome.driver", "E:\\Downloads\\chromeDriver\\chromedriver.exe");
         setUp();
-        baseUrl = "https://anotepad.com";
+        baseUrl = Settings.getBaseUrl();
         loginHelper = new LoginHelper(this);
         notesHelper = new NotesHelper(this);
         navigationHelper = new NavigationHelper(this, baseUrl);
@@ -35,7 +38,7 @@ public class ApplicationManager {
         driverWait = new WebDriverWait(driver, 100);
     }
 
-    public static ApplicationManager getInstance() {
+    public static ApplicationManager getInstance() throws IOException {
         if (app == null) {
             app = new ThreadLocal<>();
             ApplicationManager newInstance = new ApplicationManager();
